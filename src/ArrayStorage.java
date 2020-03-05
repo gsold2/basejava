@@ -14,15 +14,14 @@ public class ArrayStorage {
 
     void save(Resume r) {
         boolean isResumeExist = false;
-        if (index < 1000) {
+        if (index < 10000) {
             for (int i = 0; i < index; i++) {
                 if (storage[i].toString().equals(r.toString())) {
-                    isResumeExist = true;
-                    i = index;
+                    return;
                 }
             }
         }
-        if (!isResumeExist & index < 1000) {
+        if (!isResumeExist) {
             storage[index] = r;
             index++;
         }
