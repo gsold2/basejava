@@ -40,7 +40,7 @@ public class ArrayStorage {
                 return storage[i];
             }
         }
-        System.out.println("Resume exists");
+        System.out.println("Resume doesn't exist");
         return null;
     }
 
