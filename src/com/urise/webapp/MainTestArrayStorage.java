@@ -27,7 +27,7 @@ public class MainTestArrayStorage {
 
         System.out.println("Update r3");
         ARRAY_STORAGE.update(r4);
-        if(ARRAY_STORAGE.get("uuid3").getUuid().equals(r3.getUuid())) {
+        if(ARRAY_STORAGE.get("uuid3").getUuid().equals("uuid3")) {
             System.out.println("Update worked");
         } else {
             System.out.println("Update didn't worke");
