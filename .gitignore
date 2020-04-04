@@ -1,7 +1,12 @@
 .idea
 out
 *.iml
+*.md
 log
+/.out/
+/.idea/
+/.lesson/
+
 
 
 
