@@ -1,11 +1,12 @@
 package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.ArrayStorage;
 import ru.javawebinar.basejava.storage.SortedArrayStorage;
 import ru.javawebinar.basejava.storage.Storage;
 
 /**
- * Test for your com.urise.webapp.storage.ArrayStorage implementation
+ * Test for ru.javawebinar.basejava.storage.ArrayStorage and ru.javawebinar.basejava.storage.SortedArrayStorage
  */
 public class MainTestArrayStorage {
     private static final Storage ARRAY_STORAGE = new SortedArrayStorage();
@@ -54,7 +55,7 @@ public class MainTestArrayStorage {
         } else {
             System.out.println("Update didn't work");
         }
-        ARRAY_STORAGE.update(r5);
+        ARRAY_STORAGE.update(r4);
         printAll();
 
         System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.getUuid()));

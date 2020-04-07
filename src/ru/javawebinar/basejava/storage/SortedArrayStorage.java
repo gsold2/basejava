@@ -16,7 +16,8 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             if (index == size) {
                 storage[size] = resume;
                 size++;
-            } else if (!storage[index].equals(resume)) {
+            } else if (index < 0) {
+                index = -index - 1;
                 Resume[] shiftRight = Arrays.copyOfRange(storage, index, size);
                 System.arraycopy(shiftRight, 0, storage, (index + 1), shiftRight.length);
                 storage[index] = resume;
@@ -32,7 +33,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (storage[index].getUuid().equals(uuid)) {
+        if (index >= 0) {
             Resume[] shiftRight = Arrays.copyOfRange(storage, index + 1, size);
             System.arraycopy(shiftRight, 0, storage, index, shiftRight.length);
             storage[size - 1] = null;
@@ -46,11 +47,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     protected int getIndex(String uuid) {
         Resume searchKey = new Resume();
         searchKey.setUuid(uuid);
-        int index = Arrays.binarySearch(storage, 0, size, searchKey);
-        if (index >= 0) {
-            return index;
-        } else {
-            return Math.abs(-index - 1);
-        }
+        return Arrays.binarySearch(storage, 0, size, searchKey);
     }
 }
