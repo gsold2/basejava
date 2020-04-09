@@ -1,6 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -26,6 +27,20 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
+    public void save(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        if (index <= -1) {
+            if (size < STORAGE_LIMIT) {
+                saveItem(index, resume);
+                size++;
+            } else {
+                System.out.println("Array Storage is overflow");
+            }
+        } else {
+            System.out.println("Resume " + resume.getUuid() + " exists");
+        }
+    }
+
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index > -1) {
@@ -33,6 +48,17 @@ public abstract class AbstractArrayStorage implements Storage {
         }
         System.out.println("Resume " + uuid + " doesn't exist");
         return null;
+    }
+
+    public void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index > -1) {
+            deleteItem(index);
+            storage[size - 1] = null;
+            size--;
+        } else {
+            System.out.println("Resume " + uuid + " doesn't exist");
+        }
     }
 
     public Resume[] getAll() {
@@ -44,4 +70,8 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     protected abstract int getIndex(String uuid);
+
+    protected abstract void deleteItem(int index);
+
+    protected abstract void saveItem(int index, Resume resume);
 }
