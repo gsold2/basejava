@@ -16,8 +16,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     protected void deleteItem(int index) {
-        Resume[] shiftPart = Arrays.copyOfRange(storage, index + 1, size);
-        System.arraycopy(shiftPart, 0, storage, index, shiftPart.length);
+        System.arraycopy(storage, (index + 1), storage, index, (size - (index + 1)));
     }
 
     protected void saveItem(int index, Resume resume) {
@@ -25,8 +24,7 @@ public class SortedArrayStorage extends AbstractArrayStorage {
             storage[size] = resume;
         } else {
             index = -index - 1;
-            Resume[] shiftPart = Arrays.copyOfRange(storage, index, size);
-            System.arraycopy(shiftPart, 0, storage, (index + 1), shiftPart.length);
+            System.arraycopy(storage, index, storage, (index + 1), (size - index));
             storage[index] = resume;
         }
     }
