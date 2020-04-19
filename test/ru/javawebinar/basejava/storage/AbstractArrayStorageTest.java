@@ -6,6 +6,8 @@ import org.junit.Test;
 import ru.javawebinar.basejava.exception.*;
 import ru.javawebinar.basejava.model.Resume;
 
+import static org.junit.Assert.assertArrayEquals;
+
 public abstract class AbstractArrayStorageTest {
     protected final Storage storage;
 
@@ -49,6 +51,7 @@ public abstract class AbstractArrayStorageTest {
         Resume r = new Resume(UUID_4);
         storage.save(r);
         Assert.assertEquals(4, storage.size());
+        Assert.assertEquals(r, storage.get(UUID_4));
     }
 
     @Test(expected = ExistStorageException.class)
@@ -66,10 +69,11 @@ public abstract class AbstractArrayStorageTest {
         storage.get("fail_uuid");
     }
 
-    @Test
+    @Test(expected = NotExistStorageException.class)
     public void delete() throws Exception {
         storage.delete(UUID_1);
         Assert.assertEquals(2, storage.size());
+        storage.get(UUID_1);
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -81,6 +85,7 @@ public abstract class AbstractArrayStorageTest {
     public void getAll() throws Exception {
         Resume[] resume = new Resume[]{new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
         Assert.assertEquals(resume.length, storage.getAll().length);
+        Assert.assertArrayEquals(resume, storage.getAll());
     }
 
     @Test
