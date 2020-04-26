@@ -29,7 +29,7 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         storage.clear();
         storage.save(RESUME_1);
         storage.save(RESUME_2);
@@ -37,70 +37,70 @@ public abstract class AbstractArrayStorageTest {
     }
 
     @Test
-    public void clear() throws Exception {
+    public void clear() {
         storage.clear();
         assertSize(0);
     }
 
     @Test
-    public void update() throws Exception {
+    public void update() {
         storage.update(RESUME_2);
         assertResume(RESUME_2);
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void updateNotExist() throws Exception {
+    public void updateNotExist() {
         storage.update(RESUME_4);
     }
 
     @Test
-    public void save() throws Exception {
+    public void save() {
         storage.save(RESUME_4);
         assertSize(4);
         assertResume(RESUME_4);
     }
 
     @Test(expected = ExistStorageException.class)
-    public void saveExist() throws Exception {
+    public void saveExist() {
         storage.save(RESUME_1);
     }
 
     @Test
-    public void get() throws Exception {
+    public void get() {
         assertResume(RESUME_1);
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void getNotExist() throws Exception {
+    public void getNotExist() {
         storage.get("fail_uuid");
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void delete() throws Exception {
+    public void delete() {
         storage.delete(UUID_1);
         assertSize(2);
         storage.get(UUID_1);
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void deleteNotExist() throws Exception {
+    public void deleteNotExist() {
         storage.delete(UUID_4);
     }
 
     @Test
-    public void getAll() throws Exception {
+    public void getAll() {
         Resume[] resume = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
         assertEquals(resume.length, storage.getAll().length);
         assertArrayEquals(resume, storage.getAll());
     }
 
     @Test
-    public void size() throws Exception {
+    public void size() {
         assertSize(3);
     }
 
     @Test
-    public void stackOverFlow() throws Exception {
+    public void stackOverFlow() {
         storage.clear();
         try {
             for (int i = 1; i <= AbstractArrayStorage.STORAGE_LIMIT + 1; i++) {
