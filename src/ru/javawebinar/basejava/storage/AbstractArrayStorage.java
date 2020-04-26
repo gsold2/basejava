@@ -8,7 +8,7 @@ import java.util.Arrays;
 /**
  * Abstract Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10_000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
@@ -17,16 +17,6 @@ public abstract class AbstractArrayStorage implements Storage {
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
-    }
-
-    @Override
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index > -1) {
-            storage[index] = resume;
-        } else {
-            throw new NotExistStorageException(resume.getUuid());
-        }
     }
 
     @Override
@@ -42,15 +32,6 @@ public abstract class AbstractArrayStorage implements Storage {
         } else {
             throw new ExistStorageException(resume.getUuid());
         }
-    }
-
-    @Override
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index > -1) {
-            return storage[index];
-        }
-        throw new NotExistStorageException(uuid);
     }
 
     @Override
@@ -75,7 +56,15 @@ public abstract class AbstractArrayStorage implements Storage {
         return size;
     }
 
-    protected abstract int getIndex(String uuid);
+    @Override
+    protected void setItem(int index, Resume resume) {
+        storage[index] = resume;
+    }
+
+    @Override
+    protected Resume getItem(int index){
+        return storage[index];
+    }
 
     protected abstract void deleteItem(int index);
 
