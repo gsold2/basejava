@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.ExistStorageException;
-import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
@@ -12,26 +11,6 @@ public class ListStorage extends AbstractStorage {
     @Override
     public void clear() {
         storage.clear();
-    }
-
-    @Override
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index <= -1) {
-            storage.add(resume);
-        } else {
-            throw new ExistStorageException(resume.getUuid());
-        }
-    }
-
-    @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index > -1) {
-            storage.remove(index);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
     }
 
     @Override
@@ -46,9 +25,10 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected int getIndex(String uuid) {
-        Resume resume = new Resume(uuid);
-        if (storage.contains(new Resume(uuid))) {
-            return storage.indexOf(resume);
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
         }
         return -1;
     }
@@ -61,5 +41,27 @@ public class ListStorage extends AbstractStorage {
     @Override
     protected Resume getItem(int index) {
         return storage.get(index);
+    }
+
+    @Override
+    protected void saveItem(int index, Resume resume) {
+        storage.add(resume);
+    }
+
+    @Override
+    protected void deleteItem(int index) {
+        storage.remove(index);
+    }
+
+    @Override
+    protected void decreaseSize() {
+    }
+
+    protected void increaseSize() {
+    }
+
+    @Override
+    protected boolean isFreePlace() {
+        return true;
     }
 }
