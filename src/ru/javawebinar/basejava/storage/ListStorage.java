@@ -34,11 +34,6 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void setItem(int index, Resume resume) {
-        storage.set(index, resume);
-    }
-
-    @Override
     protected Resume getItem(int index) {
         return storage.get(index);
     }

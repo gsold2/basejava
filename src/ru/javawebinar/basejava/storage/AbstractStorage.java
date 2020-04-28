@@ -14,7 +14,7 @@ public abstract class AbstractStorage implements Storage {
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
         if (index > -1) {
-            setItem(index, resume);
+            saveItem(index, resume);
         } else {
             throw new NotExistStorageException(resume.getUuid());
         }
@@ -56,8 +56,6 @@ public abstract class AbstractStorage implements Storage {
     }
 
     protected abstract int getIndex(String uuid);
-
-    protected abstract void setItem(int index, Resume resume);
 
     protected abstract Resume getItem(int index);
 

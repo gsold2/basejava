@@ -26,11 +26,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void setItem(int index, Resume resume) {
-        storage[index] = resume;
-    }
-
-    @Override
     protected Resume getItem(int index) {
         return storage[index];
     }
