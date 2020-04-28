@@ -1,8 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 /**
@@ -21,21 +19,6 @@ public abstract class AbstractStorage implements Storage {
     }
 
     @Override
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index <= -1) {
-            if (isFreePlace()) {
-                saveItem(index, resume);
-                increaseSize();
-            } else {
-                throw new StorageException("Array Storage is overflow", resume.getUuid());
-            }
-        } else {
-            throw new ExistStorageException(resume.getUuid());
-        }
-    }
-
-    @Override
     public Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index > -1) {
@@ -44,28 +27,9 @@ public abstract class AbstractStorage implements Storage {
         throw new NotExistStorageException(uuid);
     }
 
-    @Override
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index > -1) {
-            deleteItem(index);
-            decreaseSize();
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
-    }
-
     protected abstract int getIndex(String uuid);
 
     protected abstract Resume getItem(int index);
 
     protected abstract void saveItem(int index, Resume resume);
-
-    protected abstract void deleteItem(int index);
-
-    protected abstract void decreaseSize();
-
-    protected abstract void increaseSize();
-
-    protected abstract boolean isFreePlace();
 }
