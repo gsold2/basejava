@@ -48,6 +48,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size--;
     }
 
+    @Override
+    protected void updateItem(int index, Resume resume) {
+        storage[index] = resume;
+    }
+
     protected abstract void removeElement(int index);
 
     protected abstract void keepElement(int index, Resume resume);

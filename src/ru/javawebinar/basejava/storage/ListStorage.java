@@ -46,4 +46,9 @@ public class ListStorage extends AbstractStorage {
     protected void deleteItem(int index) {
         storage.remove(index);
     }
+
+    @Override
+    protected void updateItem(int index, Resume resume) {
+        storage.set(index, resume);
+    }
 }

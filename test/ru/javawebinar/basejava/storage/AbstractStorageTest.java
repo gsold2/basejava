@@ -45,6 +45,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         storage.update(RESUME_2);
         assertResume(RESUME_2);
+        assertSize(3);
     }
 
     @Test(expected = NotExistStorageException.class)
