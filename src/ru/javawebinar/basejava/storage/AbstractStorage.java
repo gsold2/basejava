@@ -11,9 +11,9 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index > -1) {
-            updateItem(index, resume);
+        int cursor = getIndex(resume.getUuid());
+        if (cursor > -1) {
+            updateItem(cursor, resume);
         } else {
             throw new NotExistStorageException(resume.getUuid());
         }
@@ -21,9 +21,9 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index <= -1) {
-            saveItem(index, resume);
+        int cursor = getIndex(resume.getUuid());
+        if (cursor <= -1) {
+            saveItem(cursor, resume);
         } else {
             throw new ExistStorageException(resume.getUuid());
         }
@@ -31,18 +31,18 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index > -1) {
-            return getItem(index, uuid);
+        int cursor = getIndex(uuid);
+        if (cursor > -1) {
+            return getItem(cursor, uuid);
         }
         throw new NotExistStorageException(uuid);
     }
 
     @Override
     public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index > -1) {
-            deleteItem(index, uuid);
+        int cursor = getIndex(uuid);
+        if (cursor > -1) {
+            deleteItem(cursor, uuid);
         } else {
             throw new NotExistStorageException(uuid);
         }
@@ -50,11 +50,11 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract Resume getItem(int index, String uuid);
+    protected abstract Resume getItem(int cursor, String uuid);
 
-    protected abstract void saveItem(int index, Resume resume);
+    protected abstract void saveItem(int cursor, Resume resume);
 
-    protected abstract void deleteItem(int index, String uuid);
+    protected abstract void deleteItem(int cursor, String uuid);
 
-    protected abstract void updateItem(int index, Resume resume);
+    protected abstract void updateItem(int cursor, Resume resume);
 }
