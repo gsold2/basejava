@@ -2,9 +2,9 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.LinkedHashMap;
+import java.util.*;
 
-public class MapStorage  extends AbstractStorage {
+public class MapStorage extends AbstractStorage {
     protected LinkedHashMap<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
@@ -24,7 +24,7 @@ public class MapStorage  extends AbstractStorage {
 
     @Override
     protected int getIndex(String uuid) {
-        if(storage.containsKey(uuid)) {
+        if (storage.containsKey(uuid)) {
             return 1;
         }
         return -1;
