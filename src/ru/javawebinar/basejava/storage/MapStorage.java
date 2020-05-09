@@ -5,7 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.*;
 
 public class MapStorage extends AbstractStorage {
-    protected LinkedHashMap<String, Resume> storage = new LinkedHashMap<>();
+    private Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     public void clear() {
@@ -28,16 +28,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getUniversalCursor(String uuid) {
+    protected Object getCursor(String uuid) {
         return uuid;
-    }
-
-    @Override
-    protected int getIndex(String uuid) {
-        if (isItemExist(uuid)) {
-            return 1;
-        }
-        return -1;
     }
 
     @Override
@@ -46,8 +38,8 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void saveItem(Object index, Resume resume) {
-        storage.put(index.toString(), resume);
+    protected void saveItem(Object searchKey, Resume resume) {
+        storage.put(searchKey.toString(), resume);
     }
 
     @Override
@@ -56,7 +48,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateItem(Object index, Resume resume) {
-        storage.replace(index.toString(), resume);
+    protected void updateItem(Object searchKey, Resume resume) {
+        storage.replace(searchKey.toString(), resume);
     }
 }

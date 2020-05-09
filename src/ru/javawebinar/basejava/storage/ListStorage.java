@@ -5,7 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.ArrayList;
 
 public class ListStorage extends AbstractStorage {
-    protected ArrayList<Resume> storage = new ArrayList<>();
+    private ArrayList<Resume> storage = new ArrayList<>();
 
     @Override
     public void clear() {
@@ -23,7 +23,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected int getIndex(String uuid) {
+    protected Object getCursor(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -33,23 +33,23 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getItem(Object index) {
-        return storage.get((Integer) index);
+    protected Resume getItem(Object cursor) {
+        return storage.get((Integer) cursor);
     }
 
     @Override
-    protected void saveItem(Object index, Resume resume) {
+    protected void saveItem(Object cursor, Resume resume) {
         storage.add(resume);
     }
 
     @Override
-    protected void deleteItem(Object index) {
-        int cursor = (Integer) index;
-        storage.remove(cursor);
+    protected void deleteItem(Object cursor) {
+        int index = (Integer) cursor;
+        storage.remove(index);
     }
 
     @Override
-    protected void updateItem(Object index, Resume resume) {
-        storage.set((Integer) index, resume);
+    protected void updateItem(Object cursor, Resume resume) {
+        storage.set((Integer) cursor, resume);
     }
 }

@@ -13,7 +13,7 @@ public abstract class AbstractStorage implements Storage {
     public void update(Resume resume) {
         String uuid = resume.getUuid();
         if (isItemExist(uuid)) {
-            updateItem(getUniversalCursor(uuid), resume);
+            updateItem(getCursor(uuid), resume);
         } else {
             throw new NotExistStorageException(uuid);
         }
@@ -23,7 +23,7 @@ public abstract class AbstractStorage implements Storage {
     public void save(Resume resume) {
         String uuid = resume.getUuid();
         if (!isItemExist(uuid)) {
-            saveItem(getUniversalCursor(uuid), resume);
+            saveItem(getCursor(uuid), resume);
         } else {
             throw new ExistStorageException(uuid);
         }
@@ -32,7 +32,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         if (isItemExist(uuid)) {
-            return getItem(getUniversalCursor(uuid));
+            return getItem(getCursor(uuid));
         } else {
             throw new NotExistStorageException(uuid);
         }
@@ -41,26 +41,17 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public void delete(String uuid) {
         if (isItemExist(uuid)) {
-            deleteItem(getUniversalCursor(uuid));
+            deleteItem(getCursor(uuid));
         } else {
             throw new NotExistStorageException(uuid);
         }
     }
 
     protected boolean isItemExist(String uuid) {
-        int cursor = getIndex(uuid);
-        if (cursor > -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return ((Integer) getCursor(uuid) > -1);
     }
 
-    protected Object getUniversalCursor(String uuid) {
-        return getIndex(uuid);
-    }
-
-    protected abstract int getIndex(String uuid);
+    protected abstract Object getCursor(String uuid);
 
     protected abstract Resume getItem(Object cursor);
 
