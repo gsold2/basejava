@@ -28,7 +28,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getCursor(String uuid) {
+    protected String getCursor(String uuid) {
         return uuid;
     }
 

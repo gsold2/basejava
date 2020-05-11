@@ -11,44 +11,46 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        String uuid = resume.getUuid();
-        if (isItemExist(uuid)) {
-            updateItem(getCursor(uuid), resume);
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        Object searchKey = getExistedKey(resume.getUuid());
+        updateItem(searchKey, resume);
     }
 
     @Override
     public void save(Resume resume) {
-        String uuid = resume.getUuid();
-        if (!isItemExist(uuid)) {
-            saveItem(getCursor(uuid), resume);
-        } else {
-            throw new ExistStorageException(uuid);
-        }
+        Object searchKey = getNotExistedKey(resume.getUuid());
+        saveItem(searchKey, resume);
     }
 
     @Override
     public Resume get(String uuid) {
-        if (isItemExist(uuid)) {
-            return getItem(getCursor(uuid));
-        } else {
-            throw new NotExistStorageException(uuid);
-        }
+        Object searchKey = getExistedKey(uuid);
+        return getItem(searchKey);
     }
 
     @Override
     public void delete(String uuid) {
+        Object searchKey= getExistedKey(uuid);
+        deleteItem(searchKey);
+    }
+
+    protected boolean isItemExist(String uuid) {
+        return ((Integer) getCursor(uuid) >= 0);
+    }
+
+    protected Object getExistedKey(String uuid) {
         if (isItemExist(uuid)) {
-            deleteItem(getCursor(uuid));
+            return getCursor(uuid);
         } else {
             throw new NotExistStorageException(uuid);
         }
     }
 
-    protected boolean isItemExist(String uuid) {
-        return ((Integer) getCursor(uuid) > -1);
+    protected Object getNotExistedKey(String uuid) {
+        if (!isItemExist(uuid)) {
+            return getCursor(uuid);
+        } else {
+            throw new ExistStorageException(uuid);
+        }
     }
 
     protected abstract Object getCursor(String uuid);

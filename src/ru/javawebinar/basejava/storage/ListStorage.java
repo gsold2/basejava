@@ -3,9 +3,10 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    private ArrayList<Resume> storage = new ArrayList<>();
+    private List<Resume> storage = new ArrayList<>();
 
     @Override
     public void clear() {
@@ -23,7 +24,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getCursor(String uuid) {
+    protected Integer getCursor(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -44,8 +45,7 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected void deleteItem(Object cursor) {
-        int index = (Integer) cursor;
-        storage.remove(index);
+        storage.remove(((Integer) cursor).intValue());
     }
 
     @Override
