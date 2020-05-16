@@ -1,10 +1,12 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
+import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.*;
 
-public class MapStorage extends AbstractStorage {
+public class MapStorage implements Storage {
     private Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
@@ -13,8 +15,39 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] getAll() {
-        return storage.values().toArray(new Resume[0]);
+    public void update(Resume resume) {
+        if (!isExistedKey(resume.getUuid())) {
+            storage.replace(resume.getUuid(), resume);
+        }
+    }
+
+    @Override
+    public void save(Resume resume) {
+        if (!isNotExistedKey(resume.getUuid())) {
+            storage.put(resume.getUuid(), resume);
+        }
+    }
+
+    @Override
+    public Resume get(String uuid) {
+        if (isExistedKey(uuid)) {
+            return storage.get(uuid);
+        }
+        return null;
+    }
+
+    @Override
+    public void delete(String uuid) {
+        if (isExistedKey(uuid)) {
+            storage.remove(uuid);
+        }
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> list = new ArrayList<>(storage.values());
+        Collections.sort(list);
+        return list;
     }
 
     @Override
@@ -22,33 +55,19 @@ public class MapStorage extends AbstractStorage {
         return storage.size();
     }
 
-    @Override
-    protected boolean isItemExist(String uuid) {
-        return storage.containsKey(uuid);
+    protected boolean isExistedKey(String uuid) {
+        if (storage.containsKey(uuid)) {
+            return true;
+        } else {
+            throw new NotExistStorageException(uuid);
+        }
     }
 
-    @Override
-    protected String getCursor(String uuid) {
-        return uuid;
-    }
-
-    @Override
-    protected Resume getItem(Object uuid) {
-        return storage.get(uuid.toString());
-    }
-
-    @Override
-    protected void saveItem(Object searchKey, Resume resume) {
-        storage.put(searchKey.toString(), resume);
-    }
-
-    @Override
-    protected void deleteItem(Object uuid) {
-        storage.remove(uuid.toString());
-    }
-
-    @Override
-    protected void updateItem(Object searchKey, Resume resume) {
-        storage.replace(searchKey.toString(), resume);
+    protected boolean isNotExistedKey(String uuid) {
+        if (!storage.containsKey(uuid)) {
+            return false;
+        } else {
+            throw new ExistStorageException(uuid);
+        }
     }
 }

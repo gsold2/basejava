@@ -29,7 +29,7 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        Object searchKey= getExistedKey(uuid);
+        Object searchKey = getExistedKey(uuid);
         deleteItem(searchKey);
     }
 
