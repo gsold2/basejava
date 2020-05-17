@@ -4,6 +4,10 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Abstract based storage for Resumes
  */
@@ -31,6 +35,13 @@ public abstract class AbstractStorage implements Storage {
     public void delete(String uuid) {
         Object searchKey = getExistedKey(uuid);
         deleteItem(searchKey);
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> list = getList();
+        Collections.sort(list);
+        return list;
     }
 
     protected boolean isItemExist(String uuid) {
@@ -62,4 +73,6 @@ public abstract class AbstractStorage implements Storage {
     protected abstract void deleteItem(Object cursor);
 
     protected abstract void updateItem(Object cursor, Resume resume);
+
+    protected abstract List<Resume> getList();
 }

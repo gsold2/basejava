@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MapResumeStorage extends AbstractStorage {
     private Map<String, Resume> storage = new LinkedHashMap<>();
@@ -10,13 +11,6 @@ public class MapResumeStorage extends AbstractStorage {
     @Override
     public void clear() {
         storage.clear();
-    }
-
-    @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> list = new ArrayList<>(storage.values());
-        Collections.sort(list);
-        return list;
     }
 
     @Override
@@ -52,5 +46,10 @@ public class MapResumeStorage extends AbstractStorage {
     @Override
     protected void updateItem(Object searchKey, Resume resume) {
         storage.replace(searchKey.toString(), resume);
+    }
+
+    @Override
+    protected List<Resume> getList(){
+        return new ArrayList<>(storage.values());
     }
 }

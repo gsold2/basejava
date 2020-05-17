@@ -12,11 +12,6 @@ import java.util.stream.Collectors;
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public List<Resume> getAllSorted() {
-        return Arrays.stream(Arrays.copyOf(storage, size)).sorted().collect(Collectors.toList());
-    }
-
-    @Override
     protected Integer getCursor(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
@@ -34,5 +29,10 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     protected void keepElement(int index, Resume resume) {
         storage[size] = resume;
+    }
+
+    @Override
+    protected List<Resume> getList(){
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 }

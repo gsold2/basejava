@@ -9,11 +9,6 @@ import java.util.stream.Collectors;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
-    public List<Resume> getAllSorted() {
-        return Arrays.stream(Arrays.copyOf(storage, size)).collect(Collectors.toList());
-    }
-
-    @Override
     protected Integer getCursor(String uuid) {
         Resume searchKey = new Resume(uuid);
         return Arrays.binarySearch(storage, 0, size, searchKey);
@@ -31,5 +26,10 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         }
         System.arraycopy(storage, index, storage, (index + 1), (size - index));
         storage[index] = resume;
+    }
+
+    @Override
+    protected List<Resume> getList(){
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 }
