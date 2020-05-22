@@ -3,11 +3,9 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     private List<Resume> storage = new ArrayList<>();
 
     @Override
@@ -31,27 +29,27 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getItem(Object cursor) {
-        return storage.get((Integer) cursor);
+    protected Resume getItem(Integer cursor) {
+        return storage.get(cursor);
     }
 
     @Override
-    protected void saveItem(Object cursor, Resume resume) {
+    protected void saveItem(Integer cursor, Resume resume) {
         storage.add(resume);
     }
 
     @Override
-    protected void deleteItem(Object cursor) {
-        storage.remove(((Integer) cursor).intValue());
+    protected void deleteItem(Integer cursor) {
+        storage.remove(cursor.intValue());
     }
 
     @Override
-    protected void updateItem(Object cursor, Resume resume) {
-        storage.set((Integer) cursor, resume);
+    protected void updateItem(Integer cursor, Resume resume) {
+        storage.set(cursor, resume);
     }
 
     @Override
-    protected List<Resume> getList(){
-        return storage;
+    protected List<Resume> getList() {
+        return new ArrayList<>(storage);
     }
 }

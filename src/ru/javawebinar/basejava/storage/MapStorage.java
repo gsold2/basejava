@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.*;
 
 public class MapStorage implements Storage {
+
     private Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override

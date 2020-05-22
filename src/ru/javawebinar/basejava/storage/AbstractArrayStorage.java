@@ -4,8 +4,9 @@ import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10_000;
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
@@ -22,14 +23,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getItem(Object cursor) {
-        return storage[(Integer) cursor];
+    protected Resume getItem(Integer cursor) {
+        return storage[cursor];
     }
 
     @Override
-    protected void saveItem(Object cursor, Resume resume) {
+    protected void saveItem(Integer cursor, Resume resume) {
         if (size < STORAGE_LIMIT) {
-            keepElement((Integer) cursor, resume);
+            keepElement(cursor, resume);
             size++;
         } else {
             throw new StorageException("Array Storage is overflow", resume.getUuid());
@@ -37,15 +38,20 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void deleteItem(Object cursor) {
-        removeElement((Integer) cursor);
+    protected void deleteItem(Integer cursor) {
+        removeElement(cursor);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected void updateItem(Object cursor, Resume resume) {
-        storage[(Integer) cursor] = resume;
+    protected void updateItem(Integer cursor, Resume resume) {
+        storage[cursor] = resume;
+    }
+
+    @Override
+    protected List<Resume> getList(){
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
     protected abstract void removeElement(int index);

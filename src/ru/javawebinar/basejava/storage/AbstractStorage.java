@@ -4,36 +4,35 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Abstract based storage for Resumes
  */
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<SK> implements Storage {
 
     @Override
     public void update(Resume resume) {
-        Object searchKey = getExistedKey(resume.getUuid());
+        SK searchKey = getExistedKey(resume.getUuid());
         updateItem(searchKey, resume);
     }
 
     @Override
     public void save(Resume resume) {
-        Object searchKey = getNotExistedKey(resume.getUuid());
+        SK searchKey = getNotExistedKey(resume.getUuid());
         saveItem(searchKey, resume);
     }
 
     @Override
     public Resume get(String uuid) {
-        Object searchKey = getExistedKey(uuid);
+        SK searchKey = getExistedKey(uuid);
         return getItem(searchKey);
     }
 
     @Override
     public void delete(String uuid) {
-        Object searchKey = getExistedKey(uuid);
+        SK searchKey = getExistedKey(uuid);
         deleteItem(searchKey);
     }
 
@@ -48,7 +47,7 @@ public abstract class AbstractStorage implements Storage {
         return ((Integer) getCursor(uuid) >= 0);
     }
 
-    protected Object getExistedKey(String uuid) {
+    protected SK getExistedKey(String uuid) {
         if (isItemExist(uuid)) {
             return getCursor(uuid);
         } else {
@@ -56,7 +55,7 @@ public abstract class AbstractStorage implements Storage {
         }
     }
 
-    protected Object getNotExistedKey(String uuid) {
+    protected SK getNotExistedKey(String uuid) {
         if (!isItemExist(uuid)) {
             return getCursor(uuid);
         } else {
@@ -64,15 +63,15 @@ public abstract class AbstractStorage implements Storage {
         }
     }
 
-    protected abstract Object getCursor(String uuid);
+    protected abstract SK getCursor(String uuid);
 
-    protected abstract Resume getItem(Object cursor);
+    protected abstract Resume getItem(SK cursor);
 
-    protected abstract void saveItem(Object cursor, Resume resume);
+    protected abstract void saveItem(SK cursor, Resume resume);
 
-    protected abstract void deleteItem(Object cursor);
+    protected abstract void deleteItem(SK cursor);
 
-    protected abstract void updateItem(Object cursor, Resume resume);
+    protected abstract void updateItem(SK cursor, Resume resume);
 
     protected abstract List<Resume> getList();
 }

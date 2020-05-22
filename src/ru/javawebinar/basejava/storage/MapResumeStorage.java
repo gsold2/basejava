@@ -3,9 +3,8 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
-public class MapResumeStorage extends AbstractStorage {
+public class MapResumeStorage extends AbstractStorage<Resume> {
     private Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
@@ -25,27 +24,27 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected Resume getCursor(String uuid) {
-        return new Resume(uuid);
+        return new Resume(uuid, "false name");
     }
 
     @Override
-    protected Resume getItem(Object searchKey) {
-        return storage.get(searchKey.toString());
+    protected Resume getItem(Resume searchKey) {
+        return storage.get(searchKey.getUuid());
     }
 
     @Override
-    protected void saveItem(Object searchKey, Resume resume) {
-        storage.put(searchKey.toString(), resume);
+    protected void saveItem(Resume searchKey, Resume resume) {
+        storage.put(searchKey.getUuid(), resume);
     }
 
     @Override
-    protected void deleteItem(Object searchKey) {
-        storage.remove(searchKey.toString());
+    protected void deleteItem(Resume searchKey) {
+        storage.remove(searchKey.getUuid());
     }
 
     @Override
-    protected void updateItem(Object searchKey, Resume resume) {
-        storage.replace(searchKey.toString(), resume);
+    protected void updateItem(Resume searchKey, Resume resume) {
+        storage.replace(searchKey.getUuid(), resume);
     }
 
     @Override

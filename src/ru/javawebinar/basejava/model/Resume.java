@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -11,17 +12,15 @@ public class Resume implements Comparable<Resume> {
     private final String uuid;
     private final String fullName;
 
-    public Resume() {
+    public Resume(String fullName) {
+        Objects.requireNonNull(fullName, "fullName must be not null");
+        this.fullName = fullName;
         this.uuid = UUID.randomUUID().toString();
-        this.fullName = "";
-    }
-
-    public Resume(String uuid) {
-        this.uuid = uuid;
-        this.fullName = "";
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(fullName, "fullName must be not null");
+        Objects.requireNonNull(uuid, "uuid must be not null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
@@ -40,23 +39,22 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public int hashCode() {
-        return this.uuid.hashCode();
+        int result = uuid.hashCode();
+        result = 31 * result + fullName.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
-        return this.uuid;
+        return this.uuid + '(' + this.fullName + ')';
     }
 
     @Override
     public int compareTo(Resume o) {
-        if (!o.fullName.equals("")) {
-            int result = this.fullName.compareTo(o.fullName);
-            if (result == 0) {
-                return this.uuid.compareTo(o.uuid);
-            }
-            return result;
+        int result = this.fullName.compareTo(o.fullName);
+        if (result == 0) {
+            return this.uuid.compareTo(o.uuid);
         }
-        return this.uuid.compareTo(o.uuid);
+        return result;
     }
 }
