@@ -6,38 +6,46 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Abstract based storage for Resumes
  */
 public abstract class AbstractStorage<SK> implements Storage {
 
+    private final static Logger LOGGER = Logger.getLogger(AbstractStorage.class.getName());
+
     @Override
     public void update(Resume resume) {
+        LOGGER.info("Update " + resume);
         SK searchKey = getExistedKey(resume.getUuid());
         updateItem(searchKey, resume);
     }
 
     @Override
     public void save(Resume resume) {
+        LOGGER.info("Save " + resume);
         SK searchKey = getNotExistedKey(resume.getUuid());
         saveItem(searchKey, resume);
     }
 
     @Override
     public Resume get(String uuid) {
+        LOGGER.info("Get " + uuid);
         SK searchKey = getExistedKey(uuid);
         return getItem(searchKey);
     }
 
     @Override
     public void delete(String uuid) {
+        LOGGER.info("Delete " + uuid);
         SK searchKey = getExistedKey(uuid);
         deleteItem(searchKey);
     }
 
     @Override
     public List<Resume> getAllSorted() {
+        LOGGER.info("GetAllSorted");
         List<Resume> list = getList();
         Collections.sort(list);
         return list;
@@ -51,6 +59,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         if (isItemExist(uuid)) {
             return getCursor(uuid);
         } else {
+            LOGGER.warning("Resume " + uuid + " doesn't exist");
             throw new NotExistStorageException(uuid);
         }
     }
@@ -59,6 +68,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         if (!isItemExist(uuid)) {
             return getCursor(uuid);
         } else {
+            LOGGER.warning("Resume " + uuid + " already exists");
             throw new ExistStorageException(uuid);
         }
     }
