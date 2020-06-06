@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -11,11 +10,15 @@ public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private final String fullName;
+    private EnumMap<EnumContacts, String> contactSection;
+    private EnumMap<EnumSections, AbstractSection> dataSection;
 
     public Resume(String fullName) {
         Objects.requireNonNull(fullName, "fullName must be not null");
         this.fullName = fullName;
         this.uuid = UUID.randomUUID().toString();
+        this.contactSection = new EnumMap<>(EnumContacts.class);
+        this.dataSection = new EnumMap<>(EnumSections.class);
     }
 
     public Resume(String uuid, String fullName) {
@@ -23,10 +26,20 @@ public class Resume implements Comparable<Resume> {
         Objects.requireNonNull(uuid, "uuid must be not null");
         this.uuid = uuid;
         this.fullName = fullName;
+        this.contactSection = new EnumMap<>(EnumContacts.class);
+        this.dataSection = new EnumMap<>(EnumSections.class);
     }
 
     public String getUuid() {
         return this.uuid;
+    }
+
+    public EnumMap<EnumContacts, String> getContactSection() {
+        return this.contactSection;
+    }
+
+    public EnumMap<EnumSections, AbstractSection> getDataSection() {
+        return this.dataSection;
     }
 
     @Override
