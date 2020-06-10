@@ -1,8 +1,8 @@
 package ru.javawebinar.basejava.model;
 
-public enum EnumSections {
-    PERSONAL("Личные качества"),
+public enum SectionType {
     OBJECTIVE("Позиция"),
+    PERSONAL("Личные качества"),
     ACHIEVEMENT("Достижения"),
     QUALIFICATIONS("Квалификация"),
     EXPERIENCE("Опыт работы"),
@@ -10,11 +10,18 @@ public enum EnumSections {
 
     private String titel;
 
-    EnumSections(String titel) {
+    SectionType(String titel) {
         this.titel = titel;
     }
 
     public String getTitel() {
         return titel;
+    }
+
+    @Override
+    public String toString() {
+        return "SectionType{" +
+                "titel='" + titel + '\'' +
+                '}' + '\n';
     }
 }

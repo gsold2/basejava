@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
+
 import java.util.*;
 
 /**
@@ -8,37 +10,38 @@ import java.util.*;
 public class Resume implements Comparable<Resume> {
 
     // Unique identifier
-    private final String uuid;
-    private final String fullName;
-    private EnumMap<EnumContacts, String> contactSection;
-    private EnumMap<EnumSections, AbstractSection> dataSection;
+    private String uuid;
+    private String fullName;
+    private EnumMap<ContactType, String> contactSection;
+    private EnumMap<SectionType, AbstractSection> dataSection;
+
+    public Resume() {
+        this.contactSection = new EnumMap<>(ContactType.class);
+        this.dataSection = new EnumMap<>(SectionType.class);
+    }
 
     public Resume(String fullName) {
+        this();
         Objects.requireNonNull(fullName, "fullName must be not null");
         this.fullName = fullName;
         this.uuid = UUID.randomUUID().toString();
-        this.contactSection = new EnumMap<>(EnumContacts.class);
-        this.dataSection = new EnumMap<>(EnumSections.class);
     }
 
     public Resume(String uuid, String fullName) {
-        Objects.requireNonNull(fullName, "fullName must be not null");
+        this(fullName);
         Objects.requireNonNull(uuid, "uuid must be not null");
         this.uuid = uuid;
-        this.fullName = fullName;
-        this.contactSection = new EnumMap<>(EnumContacts.class);
-        this.dataSection = new EnumMap<>(EnumSections.class);
     }
 
     public String getUuid() {
         return this.uuid;
     }
 
-    public EnumMap<EnumContacts, String> getContactSection() {
+    public EnumMap<ContactType, String> getContactSection() {
         return this.contactSection;
     }
 
-    public EnumMap<EnumSections, AbstractSection> getDataSection() {
+    public EnumMap<SectionType, AbstractSection> getDataSection() {
         return this.dataSection;
     }
 
@@ -46,20 +49,32 @@ public class Resume implements Comparable<Resume> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Resume resume = (Resume) o;
-        return this.uuid.equals(resume.uuid);
+
+        if (!uuid.equals(resume.uuid)) return false;
+        if (!fullName.equals(resume.fullName)) return false;
+        if (!contactSection.equals(resume.contactSection)) return false;
+        return dataSection.equals(resume.dataSection);
     }
 
     @Override
     public int hashCode() {
         int result = uuid.hashCode();
         result = 31 * result + fullName.hashCode();
+        result = 31 * result + contactSection.hashCode();
+        result = 31 * result + dataSection.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return this.uuid + '(' + this.fullName + ')';
+        return "Resume{" + '\n' +
+                ", uuid='" + uuid + '\'' + '\n' +
+                ", fullName='" + fullName + '\'' + '\n' +
+                ", contactSection=" + contactSection + '\n' +
+                ", dataSection=" + dataSection +
+                '}';
     }
 
     @Override
