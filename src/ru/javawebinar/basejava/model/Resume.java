@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.model;
 
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
-
 import java.util.*;
 
 /**
@@ -10,39 +8,32 @@ import java.util.*;
 public class Resume implements Comparable<Resume> {
 
     // Unique identifier
-    private String uuid;
-    private String fullName;
-    private EnumMap<ContactType, String> contactSection;
-    private EnumMap<SectionType, AbstractSection> dataSection;
+    private final String uuid;
+    private final String fullName;
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
-    public Resume() {
-        this.contactSection = new EnumMap<>(ContactType.class);
-        this.dataSection = new EnumMap<>(SectionType.class);
+    public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(fullName, "fullName must be not null");
+        Objects.requireNonNull(uuid, "uuid must be not null");
+        this.uuid = uuid;
+        this.fullName = fullName;
     }
 
     public Resume(String fullName) {
-        this();
-        Objects.requireNonNull(fullName, "fullName must be not null");
-        this.fullName = fullName;
-        this.uuid = UUID.randomUUID().toString();
-    }
-
-    public Resume(String uuid, String fullName) {
-        this(fullName);
-        Objects.requireNonNull(uuid, "uuid must be not null");
-        this.uuid = uuid;
+        this(UUID.randomUUID().toString(), fullName);
     }
 
     public String getUuid() {
         return this.uuid;
     }
 
-    public EnumMap<ContactType, String> getContactSection() {
-        return this.contactSection;
+    public Map<ContactType, String> getContact() {
+        return this.contacts;
     }
 
-    public EnumMap<SectionType, AbstractSection> getDataSection() {
-        return this.dataSection;
+    public Map<SectionType, AbstractSection> getSections() {
+        return this.sections;
     }
 
     @Override
@@ -54,16 +45,16 @@ public class Resume implements Comparable<Resume> {
 
         if (!uuid.equals(resume.uuid)) return false;
         if (!fullName.equals(resume.fullName)) return false;
-        if (!contactSection.equals(resume.contactSection)) return false;
-        return dataSection.equals(resume.dataSection);
+        if (!contacts.equals(resume.contacts)) return false;
+        return sections.equals(resume.sections);
     }
 
     @Override
     public int hashCode() {
         int result = uuid.hashCode();
         result = 31 * result + fullName.hashCode();
-        result = 31 * result + contactSection.hashCode();
-        result = 31 * result + dataSection.hashCode();
+        result = 31 * result + contacts.hashCode();
+        result = 31 * result + sections.hashCode();
         return result;
     }
 
@@ -72,8 +63,8 @@ public class Resume implements Comparable<Resume> {
         return "Resume{" + '\n' +
                 ", uuid='" + uuid + '\'' + '\n' +
                 ", fullName='" + fullName + '\'' + '\n' +
-                ", contactSection=" + contactSection + '\n' +
-                ", dataSection=" + dataSection +
+                ", contactSection=" + contacts + '\n' +
+                ", dataSection=" + sections +
                 '}';
     }
 

@@ -9,7 +9,7 @@ public enum ContactType {
     STACKOVERFLOW("Профиль Stackoverflow"),
     HOMEPAGE("Домашняя страница");
 
-    private String titel;
+    private final String titel;
 
     ContactType(String titel) {
         this.titel = titel;

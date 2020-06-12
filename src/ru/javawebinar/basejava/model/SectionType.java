@@ -8,14 +8,10 @@ public enum SectionType {
     EXPERIENCE("Опыт работы"),
     EDUCATION("Образование");
 
-    private String titel;
+    private final String titel;
 
     SectionType(String titel) {
         this.titel = titel;
-    }
-
-    public String getTitel() {
-        return titel;
     }
 
     @Override
