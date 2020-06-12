@@ -1,29 +1,38 @@
 package ru.javawebinar.basejava.model;
 
+import java.lang.reflect.Array;
 import java.time.YearMonth;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Organization {
 
     private final Link homePage;
-    private final YearMonth startData;
-    private final YearMonth endData;
-    private final String subTitel;
-    private final String description;
+    private final List<Period> periods;
 
-    public Organization(String name, String url, YearMonth startData, YearMonth endData, String subTitel, String description) {
-        Objects.requireNonNull(startData, "start must not be null");
-        Objects.requireNonNull(endData, "start must not be null");
-        Objects.requireNonNull(subTitel, "start must not be null");
+    public Organization(String name, String url, YearMonth startData, YearMonth endData, String subTitel,
+                        String description) {
         this.homePage = new Link(name, url);
-        this.startData = startData;
-        this.endData = endData;
-        this.subTitel = subTitel;
-        this.description = description;
+        this.periods = Collections.singletonList(new Period(startData, endData, subTitel, description));
     }
 
     public Organization(String name, YearMonth startData, YearMonth endData, String subTitel, String description) {
         this(name, "", startData, endData, subTitel, description);
+    }
+
+    public Organization(String name, YearMonth startData, YearMonth endData, String subTitel) {
+        this(name, "", startData, endData, subTitel, "");
+    }
+
+    public Organization(String name, String url, List<Period> periods) {
+        this.homePage = new Link(name, url);
+        this.periods = periods;
+    }
+
+    public Organization(String name, List<Period> periods) {
+        this(name, "", periods);
     }
 
     @Override
@@ -34,28 +43,21 @@ public class Organization {
         Organization that = (Organization) o;
 
         if (!homePage.equals(that.homePage)) return false;
-        if (!startData.equals(that.startData)) return false;
-        if (!endData.equals(that.endData)) return false;
-        return subTitel.equals(that.subTitel);
+        return periods.equals(that.periods);
     }
 
     @Override
     public int hashCode() {
         int result = homePage.hashCode();
-        result = 31 * result + startData.hashCode();
-        result = 31 * result + endData.hashCode();
-        result = 31 * result + subTitel.hashCode();
+        result = 31 * result + periods.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return "Experience{" +
-                "homePage='" + homePage + '\'' +
-                ", start=" + startData +
-                ", end=" + endData +
-                ", subTitel='" + subTitel + '\'' +
-                ", text='" + description + '\'' +
+        return "Organization{" +
+                "homePage=" + homePage +
+                ", periods=" + periods +
                 '}' + '\n';
     }
 }

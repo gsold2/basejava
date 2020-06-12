@@ -33,8 +33,8 @@ public class ResumeTestData {
                 "Более 1000 выпускников.");
         achievements.add("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike. " +
                 "Интеграция с Twilio, DuoSecurity, Google Authenticator, Jira, Zendesk.");
-        achievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. Интеграция с 1С, " +
-                "Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: " +
+        achievements.add("Налаживание процесса разработки и непрерывной интеграции ERP системы River BPM. " +
+                "Интеграция с 1С, Bonita BPM, CMIS, LDAP. Разработка приложения управления окружением на стеке: " +
                 "Scala/Play/Anorm/JQuery. Разработка SSO аутентификации и авторизации различных ERP модулей, " +
                 "интеграция CIFS/SMB java сервера.");
         achievements.add("Реализация c нуля Rich Internet Application приложения на стеке технологий JPA, Spring, " +
@@ -43,8 +43,8 @@ public class ResumeTestData {
                 "(SOA-base архитектура, JAX-WS, JMS, AS Glassfish). Сбор статистики сервисов и информации о " +
                 "состоянии через систему мониторинга Nagios. Реализация онлайн клиента для администрирования и " +
                 "мониторинга системы по JMX (Jython/ Django).");
-        achievements.add("Реализация протоколов по приему платежей всех основных платежных системы России (Cyberplat, " +
-                "Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа.");
+        achievements.add("Реализация протоколов по приему платежей всех основных платежных системы России " +
+                "(Cyberplat, Eport, Chronopay, Сбербанк), Белоруcсии(Erip, Osmp) и Никарагуа.");
         resume.getSections().put(SectionType.ACHIEVEMENT,
                 new ListSection(achievements));
 
@@ -61,12 +61,12 @@ public class ResumeTestData {
         qualifications.add("Python: Django.");
         qualifications.add("JavaScript: jQuery, ExtJS, Bootstrap.js, underscore.js");
         qualifications.add("Scala: SBT, Play2, Specs2, Anorm, Spray, Akka");
-        qualifications.add("Технологии: Servlet, JSP/JSTL, JAX-WS, REST, EJB, RMI, JMS, JavaMail, JAXB, StAX, SAX, DOM, " +
-                "XSLT, MDB, JMX, JDBC, JPA, JNDI, JAAS, SOAP, AJAX, Commet, HTML5, ESB, CMIS, BPMN2, LDAP, OAuth1, " +
-                "OAuth2, JWT.");
+        qualifications.add("Технологии: Servlet, JSP/JSTL, JAX-WS, REST, EJB, RMI, JMS, JavaMail, JAXB, StAX, SAX, " +
+                "DOM, XSLT, MDB, JMX, JDBC, JPA, JNDI, JAAS, SOAP, AJAX, Commet, HTML5, ESB, CMIS, BPMN2, LDAP, " +
+                "OAuth1, OAuth2, JWT.");
         qualifications.add("Инструменты: Maven + plugin development, Gradle, настройка Ngnix,");
-        qualifications.add("администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher, Flyway, Nagios, iReport, " +
-                "OpenCmis, Bonita, pgBouncer.");
+        qualifications.add("администрирование Hudson/Jenkins, Ant + custom task, SoapUI, JPublisher, Flyway, " +
+                "Nagios, iReport, OpenCmis, Bonita, pgBouncer.");
         qualifications.add("Отличное знание и опыт применения концепций ООП, SOA, шаблонов проектрирования, " +
                 "архитектурных шаблонов, UML, функционального программирования");
         qualifications.add("Родной русский, английский \"upper intermediate\"");
@@ -82,8 +82,8 @@ public class ResumeTestData {
                 "управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, " +
                 "Redis). Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."));
         organizations.add(new Organization("RIT Center", YearMonth.parse("2012-04"), YearMonth.parse("2014-10"),
-                "Java архитектор", "Организация процесса разработки системы ERP для разных окружений: " +
-                "релизная политика, версионирование, ведение CI (Jenkins), миграция базы " +
+                "Java архитектор", "Организация процесса разработки системы ERP для разных " +
+                "окружений: релизная политика, версионирование, ведение CI (Jenkins), миграция базы " +
                 "(кастомизация Flyway), конфигурирование системы (pgBoucer, Nginx), AAA via SSO. " +
                 "Архитектура БД и серверной части системы. Разработка интергационных сервисов: CMIS, BPMN2, " +
                 "1C (WebServices), сервисов общего назначения (почта, экспорт в pdf, doc, html). " +
@@ -91,8 +91,9 @@ public class ResumeTestData {
                 "Maven + plugin development, Ant, Apache Commons, Spring security, Spring MVC, Tomcat,WSO2, " +
                 "xcmis, OpenCmis, Bonita, Python scripting, Unix shell remote scripting via ssh tunnels, " +
                 "PL/Python"));
-        organizations.add(new Organization("Luxoft (Deutsche Bank)", YearMonth.parse("2010-12"), YearMonth.parse("2012-04"),
-                "Ведущий программист", "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, " +
+        organizations.add(new Organization("Luxoft (Deutsche Bank)", YearMonth.parse("2010-12"),
+                YearMonth.parse("2012-04"), "Ведущий программист",
+                "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, " +
                 "Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной " +
                 "части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа " +
                 "результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, " +
@@ -117,27 +118,25 @@ public class ResumeTestData {
         ArrayList<Organization> educations = new ArrayList<>();
         educations.add(new Organization("Coursera",
                 YearMonth.parse("2013-03"), YearMonth.parse("2013-05"), "\"Functional Programming Principles " +
-                "in Scala\" by Martin Odersky", ""));
+                "in Scala\" by Martin Odersky"));
         educations.add(new Organization("Luxoft",
                 YearMonth.parse("2011-03"), YearMonth.parse("2011-04"), "Курс \"Объектно-ориентированный " +
-                "анализ ИС. Концептуальное моделирование на UML.\"", ""));
+                "анализ ИС. Концептуальное моделирование на UML.\""));
         educations.add(new Organization("Siemens AG",
                 YearMonth.parse("2005-01"), YearMonth.parse("2005-04"), "3 месяца обучения мобильным " +
-                "IN сетям (Берлин)", ""));
+                "IN сетям (Берлин)"));
         educations.add(new Organization("Alcatel",
                 YearMonth.parse("1998-09"), YearMonth.parse("1998-09"), "6 месяцев обучения цифровым " +
-                "телефонным сетям (Москва)", ""));
+                "телефонным сетям (Москва)"));
+        List<Period> periods = new ArrayList<>();
+        periods.add(new Period(YearMonth.parse("1993-09"), YearMonth.parse("1996-07"), "Аспирантура " +
+                "(программист С, С++)"));
+        periods.add(new Period(YearMonth.parse("1987-09"), YearMonth.parse("1993-07"), "Инженер " +
+                "(программист Fortran, C)"));
         educations.add(new Organization("Санкт-Петербургский национальный исследовательский " +
-                "университет информационных технологий, механики и оптики",
-                YearMonth.parse("1993-09"), YearMonth.parse("1996-07"), "Аспирантура (программист С, С++)",
-                ""));
-        educations.add(new Organization("Санкт-Петербургский национальный исследовательский " +
-                "университет информационных технологий, механики и оптики",
-                YearMonth.parse("1987-09"), YearMonth.parse("1993-07"), "Инженер (программист Fortran, C)",
-                ""));
+                "университет информационных технологий, механики и оптики", periods));
         educations.add(new Organization("Заочная физико-техническая школа при МФТИ",
-                YearMonth.parse("1984-09"), YearMonth.parse("1987-06"), "Закончил с отличием",
-                ""));
+                YearMonth.parse("1984-09"), YearMonth.parse("1987-06"), "Закончил с отличием"));
         resume.getSections().put(SectionType.EDUCATION,
                 new OrganizationSection(educations));
         System.out.println(resume.toString());

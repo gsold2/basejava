@@ -17,9 +17,7 @@ public class Link {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Link link = (Link) o;
-
         return name.equals(link.name);
     }
 
