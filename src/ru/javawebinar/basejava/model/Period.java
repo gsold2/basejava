@@ -10,6 +10,10 @@ public class Period {
     private final String subTitel;
     private final String description;
 
+    public Period(YearMonth startData, YearMonth endData, String subTitel) {
+        this(startData, endData, subTitel, "");
+    }
+
     public Period(YearMonth startData, YearMonth endData, String subTitel, String description) {
         Objects.requireNonNull(startData, "start must not be null");
         Objects.requireNonNull(endData, "start must not be null");
@@ -18,10 +22,6 @@ public class Period {
         this.endData = endData;
         this.subTitel = subTitel;
         this.description = description;
-    }
-
-    public Period(YearMonth startData, YearMonth endData, String subTitel) {
-        this(startData, endData, subTitel, "");
     }
 
     @Override

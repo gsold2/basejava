@@ -1,9 +1,6 @@
 package ru.javawebinar.basejava.model;
 
-import java.lang.reflect.Array;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,18 +9,18 @@ public class Organization {
     private final Link homePage;
     private final List<Period> periods;
 
-    public Organization(String name, String url, YearMonth startData, YearMonth endData, String subTitel,
-                        String description) {
-        this.homePage = new Link(name, url);
-        this.periods = Collections.singletonList(new Period(startData, endData, subTitel, description));
+    public Organization(String name, YearMonth startData, YearMonth endData, String subTitel) {
+        this(name, "", startData, endData, subTitel, "");
     }
 
     public Organization(String name, YearMonth startData, YearMonth endData, String subTitel, String description) {
         this(name, "", startData, endData, subTitel, description);
     }
 
-    public Organization(String name, YearMonth startData, YearMonth endData, String subTitel) {
-        this(name, "", startData, endData, subTitel, "");
+    public Organization(String name, String url, YearMonth startData, YearMonth endData, String subTitel,
+                        String description) {
+        this.homePage = new Link(name, url);
+        this.periods = Collections.singletonList(new Period(startData, endData, subTitel, description));
     }
 
     public Organization(String name, String url, List<Period> periods) {
