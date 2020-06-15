@@ -18,11 +18,6 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected boolean isItemExist(String uuid) {
-        return storage.containsKey(uuid);
-    }
-
-    @Override
     protected Resume getCursor(String uuid) {
         return new Resume(uuid, "false name");
     }
@@ -48,7 +43,12 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected List<Resume> getList(){
+    protected List<Resume> getList() {
         return new ArrayList<>(storage.values());
+    }
+
+    @Override
+    protected boolean isItemExist(Resume searchKey) {
+        return storage.containsKey(searchKey.getUuid());
     }
 }

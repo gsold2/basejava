@@ -51,13 +51,10 @@ public abstract class AbstractStorage<SK> implements Storage {
         return list;
     }
 
-    protected boolean isItemExist(String uuid) {
-        return ((Integer) getCursor(uuid) >= 0);
-    }
-
     protected SK getExistedKey(String uuid) {
-        if (isItemExist(uuid)) {
-            return getCursor(uuid);
+        SK cursor = getCursor(uuid);
+        if (isItemExist(cursor)) {
+            return cursor;
         } else {
             LOGGER.warning("Resume " + uuid + " doesn't exist");
             throw new NotExistStorageException(uuid);
@@ -65,8 +62,9 @@ public abstract class AbstractStorage<SK> implements Storage {
     }
 
     protected SK getNotExistedKey(String uuid) {
-        if (!isItemExist(uuid)) {
-            return getCursor(uuid);
+        SK cursor = getCursor(uuid);
+        if (!isItemExist(cursor)) {
+            return cursor;
         } else {
             LOGGER.warning("Resume " + uuid + " already exists");
             throw new ExistStorageException(uuid);
@@ -84,4 +82,6 @@ public abstract class AbstractStorage<SK> implements Storage {
     protected abstract void updateItem(SK cursor, Resume resume);
 
     protected abstract List<Resume> getList();
+
+    protected abstract boolean isItemExist(SK cursor);
 }

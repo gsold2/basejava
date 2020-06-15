@@ -25,7 +25,7 @@ public class ListStorage extends AbstractStorage<Integer> {
                 return i;
             }
         }
-        return -1;
+        return null;
     }
 
     @Override
@@ -51,5 +51,10 @@ public class ListStorage extends AbstractStorage<Integer> {
     @Override
     protected List<Resume> getList() {
         return new ArrayList<>(storage);
+    }
+
+    @Override
+    protected boolean isItemExist(Integer cursor) {
+        return cursor != null;
     }
 }

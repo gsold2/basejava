@@ -50,8 +50,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    protected List<Resume> getList(){
+    protected List<Resume> getList() {
         return Arrays.asList(Arrays.copyOf(storage, size));
+    }
+
+    @Override
+    protected boolean isItemExist(Integer cursor) {
+        return cursor >= 0;
     }
 
     protected abstract void removeElement(int index);

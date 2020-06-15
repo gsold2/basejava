@@ -18,11 +18,6 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     @Override
-    protected boolean isItemExist(String uuid) {
-        return storage.containsKey(uuid);
-    }
-
-    @Override
     protected String getCursor(String uuid) {
         return uuid;
     }
@@ -48,7 +43,12 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     @Override
-    protected List<Resume> getList(){
+    protected List<Resume> getList() {
         return new ArrayList<>(storage.values());
+    }
+
+    @Override
+    protected boolean isItemExist(String uuid) {
+        return storage.containsKey(uuid);
     }
 }

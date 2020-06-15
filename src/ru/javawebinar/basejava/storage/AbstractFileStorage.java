@@ -88,6 +88,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return getFiles;
     }
 
+    @Override
+    protected boolean isItemExist(File file) {
+        return file.isFile();
+    }
+
     protected abstract Resume read(File file);
 
     protected abstract void write(File file, Resume resume) throws IOException;
