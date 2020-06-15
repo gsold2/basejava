@@ -60,32 +60,32 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> getList() {
         List<Resume> resumes = new ArrayList<>();
-        for (File file : Objects.requireNonNull(directory.listFiles())) {
-            if (file.isFile()) {
-                resumes.add(read(file));
-            }
+        for (File file : getFiles()) {
+                 resumes.add(read(file));
         }
         return resumes;
     }
 
     @Override
     public void clear() {
-        for (File file : Objects.requireNonNull(directory.listFiles())) {
-            if (file.isFile()) {
+        for (File file : getFiles()) {
                 file.delete();
-            }
         }
     }
 
     @Override
     public int size() {
-        int count = 0;
+        return getFiles().size();
+    }
+
+    protected List<File> getFiles(){
+        List<File> getFiles = new ArrayList<>();
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             if (file.isFile()) {
-                count++;
+                getFiles.add(file);
             }
         }
-        return count;
+        return getFiles;
     }
 
     protected abstract Resume read(File file);

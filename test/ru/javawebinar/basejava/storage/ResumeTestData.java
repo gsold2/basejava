@@ -9,8 +9,13 @@ import java.util.List;
 public class ResumeTestData {
 
     public static void main(String[] args) {
+        Resume resume = resumeTest("uuid", "Григорий Кислин");
+        System.out.println(resume.toString());
+    }
 
-        Resume resume = new Resume("uuid", "Григорий Кислин");
+    public static Resume resumeTest(String uuid, String name) {
+
+        Resume resume = new Resume(uuid, name);
 
         resume.getContact().put(ContactType.CELLPHONE, "+7(921) 855-0482");
         resume.getContact().put(ContactType.SKYPE, "grigory.kislin");
@@ -94,10 +99,10 @@ public class ResumeTestData {
         organizations.add(new Organization("Luxoft (Deutsche Bank)", YearMonth.parse("2010-12"),
                 YearMonth.parse("2012-04"), "Ведущий программист",
                 "Участие в проекте Deutsche Bank CRM (WebLogic, Hibernate, " +
-                "Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной " +
-                "части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа " +
-                "результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, " +
-                "ExtGWT (GXT), Highstock, Commet, HTML5."));
+                        "Spring, Spring MVC, SmartGWT, GWT, Jasper, Oracle). Реализация клиентской и серверной " +
+                        "части CRM. Реализация RIA-приложения для администрирования, мониторинга и анализа " +
+                        "результатов в области алгоритмического трейдинга. JPA, Spring, Spring-MVC, GWT, " +
+                        "ExtGWT (GXT), Highstock, Commet, HTML5."));
         organizations.add(new Organization("Yota", YearMonth.parse("2008-06"), YearMonth.parse("2010-12"),
                 "Ведущий специалист", "Дизайн и имплементация Java EE фреймворка для отдела" +
                 " \"Платежные Системы\" (GlassFish v2.1, v3, OC4J, EJB3, JAX-WS RI 2.1, Servlet 2.4, JSP, " +
@@ -139,6 +144,6 @@ public class ResumeTestData {
                 YearMonth.parse("1984-09"), YearMonth.parse("1987-06"), "Закончил с отличием"));
         resume.getSections().put(SectionType.EDUCATION,
                 new OrganizationSection(educations));
-        System.out.println(resume.toString());
+        return resume;
     }
 }
