@@ -15,16 +15,16 @@ public abstract class AbstractStorageTest {
     protected final Storage storage;
 
     private static final String UUID_1 = "uuid1";
-    private static final Resume RESUME_1 = ResumeTestData.resumeTest(UUID_1, "name1");
+    private static final Resume RESUME_1 = ResumeTestData.createResumeInstance(UUID_1, "name1");
 
     private static final String UUID_2 = "uuid2";
-    private static final Resume RESUME_2 = ResumeTestData.resumeTest(UUID_2, "name2");
+    private static final Resume RESUME_2 = ResumeTestData.createResumeInstance(UUID_2, "name2");
 
     private static final String UUID_3 = "uuid3";
-    private static final Resume RESUME_3 = ResumeTestData.resumeTest(UUID_3, "name3");
+    private static final Resume RESUME_3 = ResumeTestData.createResumeInstance(UUID_3, "name3");
 
     private static final String UUID_4 = "uuid4";
-    private static final Resume RESUME_4 = ResumeTestData.resumeTest(UUID_4, "name2");
+    private static final Resume RESUME_4 = ResumeTestData.createResumeInstance(UUID_4, "name2");
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -92,10 +92,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void getAllSorted() {
-        List<Resume> list = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
-        Collections.sort(list);
-        assertEquals(list.size(), storage.size());
-        assertEquals(list, storage.getAllSorted());
+        List<Resume> actualResumes = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(actualResumes);
+        assertEquals(actualResumes, storage.getAllSorted());
     }
 
     @Test

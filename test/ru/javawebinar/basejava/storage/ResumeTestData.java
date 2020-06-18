@@ -9,12 +9,11 @@ import java.util.List;
 public class ResumeTestData {
 
     public static void main(String[] args) {
-        Resume resume = resumeTest("uuid", "Григорий Кислин");
+        Resume resume = createResumeInstance("uuid", "Григорий Кислин");
         System.out.println(resume.toString());
     }
 
-    public static Resume resumeTest(String uuid, String name) {
-
+    public static Resume createResumeInstance(String uuid, String name) {
         Resume resume = new Resume(uuid, name);
 
         resume.getContact().put(ContactType.CELLPHONE, "+7(921) 855-0482");
@@ -133,13 +132,13 @@ public class ResumeTestData {
         educations.add(new Organization("Alcatel",
                 YearMonth.parse("1998-09"), YearMonth.parse("1998-09"), "6 месяцев обучения цифровым " +
                 "телефонным сетям (Москва)"));
-        List<Period> periods = new ArrayList<>();
-        periods.add(new Period(YearMonth.parse("1993-09"), YearMonth.parse("1996-07"), "Аспирантура " +
+        List<Position> positions = new ArrayList<>();
+        positions.add(new Position(YearMonth.parse("1993-09"), YearMonth.parse("1996-07"), "Аспирантура " +
                 "(программист С, С++)"));
-        periods.add(new Period(YearMonth.parse("1987-09"), YearMonth.parse("1993-07"), "Инженер " +
+        positions.add(new Position(YearMonth.parse("1987-09"), YearMonth.parse("1993-07"), "Инженер " +
                 "(программист Fortran, C)"));
         educations.add(new Organization("Санкт-Петербургский национальный исследовательский " +
-                "университет информационных технологий, механики и оптики", periods));
+                "университет информационных технологий, механики и оптики", positions));
         educations.add(new Organization("Заочная физико-техническая школа при МФТИ",
                 YearMonth.parse("1984-09"), YearMonth.parse("1987-06"), "Закончил с отличием"));
         resume.getSections().put(SectionType.EDUCATION,

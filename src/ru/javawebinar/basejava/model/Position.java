@@ -3,18 +3,18 @@ package ru.javawebinar.basejava.model;
 import java.time.YearMonth;
 import java.util.Objects;
 
-public class Period {
+public class Position {
 
     private final YearMonth startData;
     private final YearMonth endData;
     private final String subTitel;
     private final String description;
 
-    public Period(YearMonth startData, YearMonth endData, String subTitel) {
+    public Position(YearMonth startData, YearMonth endData, String subTitel) {
         this(startData, endData, subTitel, "");
     }
 
-    public Period(YearMonth startData, YearMonth endData, String subTitel, String description) {
+    public Position(YearMonth startData, YearMonth endData, String subTitel, String description) {
         Objects.requireNonNull(startData, "start must not be null");
         Objects.requireNonNull(endData, "start must not be null");
         Objects.requireNonNull(subTitel, "start must not be null");
@@ -28,10 +28,10 @@ public class Period {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Period period = (Period) o;
-        if (!startData.equals(period.startData)) return false;
-        if (!endData.equals(period.endData)) return false;
-        return subTitel.equals(period.subTitel);
+        Position position = (Position) o;
+        if (!startData.equals(position.startData)) return false;
+        if (!endData.equals(position.endData)) return false;
+        return subTitel.equals(position.subTitel);
     }
 
     @Override

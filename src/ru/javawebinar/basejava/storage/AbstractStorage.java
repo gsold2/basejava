@@ -51,7 +51,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         return list;
     }
 
-    protected SK getExistedKey(String uuid) {
+    private SK getExistedKey(String uuid) {
         SK cursor = getCursor(uuid);
         if (isItemExist(cursor)) {
             return cursor;
@@ -61,7 +61,7 @@ public abstract class AbstractStorage<SK> implements Storage {
         }
     }
 
-    protected SK getNotExistedKey(String uuid) {
+    private SK getNotExistedKey(String uuid) {
         SK cursor = getCursor(uuid);
         if (!isItemExist(cursor)) {
             return cursor;
