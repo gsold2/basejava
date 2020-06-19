@@ -6,13 +6,13 @@ import java.util.Objects;
 public class MainFile {
     public static void main(String[] args) {
         File dir = new File("./");
-        writetFiles(dir);
+        printDirectoriesDeeply(dir);
     }
 
-    public static void writetFiles(File directory) {
+    public static void printDirectoriesDeeply(File directory) {
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             if (file.isDirectory()) {
-                writetFiles(file);
+                printDirectoriesDeeply(file);
             } else {
                 System.out.println(file);
             }

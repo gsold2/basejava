@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,9 +8,9 @@ public class OrganizationSection extends AbstractSection {
 
     private final List<Organization> organizations;
 
-    public OrganizationSection(List<Organization> organizations) {
+    public OrganizationSection(Organization...organizations) {
         Objects.requireNonNull(organizations, "list must not be null");
-        this.organizations = organizations;
+        this.organizations = Arrays.asList(organizations);
     }
 
     @Override
