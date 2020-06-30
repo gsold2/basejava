@@ -1,9 +1,10 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.*;
 
-public class Organization {
+public class Organization implements Serializable {
 
     private final Link homePage;
     private final List<Position> positions;
@@ -43,7 +44,7 @@ public class Organization {
                 '}' + '\n';
     }
 
-    public static class Position {
+    public static class Position implements Serializable {
 
         private final YearMonth startData;
         private final YearMonth endData;

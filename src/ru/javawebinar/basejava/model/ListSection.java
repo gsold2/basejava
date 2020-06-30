@@ -1,10 +1,11 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ListSection extends AbstractSection {
+public class ListSection extends AbstractSection implements Serializable {
 
     private final List<String> items;
 

@@ -3,20 +3,18 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class AbstractFileStorage extends AbstractStorage<File> {
-
     protected File directory;
 
     protected AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, " directory must not be null");
         if (!directory.isDirectory()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
+            throw new IllegalArgumentException(directory.toString() + " is not directory");
         } else if (!directory.canRead() || !directory.canWrite()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable|writebal");
         }
@@ -31,7 +29,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getItem(File file) {
         try {
-            return read(file);
+            return read(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Can't read " + file.getAbsolutePath(), file.getName(), e);
         }
@@ -41,7 +39,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveItem(File file, Resume resume) {
         try {
             file.createNewFile();
-            write(file, resume);
+            write(new BufferedOutputStream(new FileOutputStream(file)), resume);
         } catch (IOException e) {
             throw new StorageException("Can't create " + file.getAbsolutePath(), file.getName(), e);
         }
@@ -59,7 +57,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateItem(File file, Resume resume) {
         try {
-            write(file, resume);
+            write(new BufferedOutputStream(new FileOutputStream(file)), resume);
         } catch (IOException e) {
             throw new StorageException("Can't update " + file.getAbsolutePath(), file.getName(), e);
         }
@@ -83,7 +81,11 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        return Objects.requireNonNull(directory.listFiles()).length;
+        String[] list = directory.list();
+        if (list == null) {
+            throw new StorageException("Directory read error ", null);
+        }
+        return list.length;
     }
 
     protected List<File> getFiles() {
@@ -105,7 +107,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         return file.exists();
     }
 
-    protected abstract Resume read(File file) throws IOException;
+    protected abstract Resume read(InputStream is) throws IOException;
 
-    protected abstract void write(File file, Resume resume) throws IOException;
+    protected abstract void write(OutputStream os, Resume resume) throws IOException;
 }
