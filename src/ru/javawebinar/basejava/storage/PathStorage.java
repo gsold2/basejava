@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class StreamPathStorage extends AbstractStorage<Path> implements Serializable {
+public class PathStorage extends AbstractStorage<Path> implements Serializable {
 
     protected Path directory;
     protected SerializationStrategy strategy;
 
-    protected StreamPathStorage(Path directory, SerializationStrategy strategy) {
+    protected PathStorage(Path directory, SerializationStrategy strategy) {
         Objects.requireNonNull(directory, " directory must not be null");
         if (!Files.isDirectory(directory)) {
             throw new IllegalArgumentException(directory.toString() + " is not directory");
@@ -35,7 +35,7 @@ public class StreamPathStorage extends AbstractStorage<Path> implements Serializ
     @Override
     protected Resume getItem(Path file) {
         try {
-            return read(Files.newInputStream(file));
+            return strategy.read(new BufferedInputStream(Files.newInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Can't read " + file.toAbsolutePath(), file.toString(), e);
         }
@@ -58,7 +58,7 @@ public class StreamPathStorage extends AbstractStorage<Path> implements Serializ
     @Override
     protected void updateItem(Path file, Resume resume) {
         try {
-            write(Files.newOutputStream(file), resume);
+            strategy.write(new BufferedOutputStream(Files.newOutputStream(file)), resume);
         } catch (IOException e) {
             throw new StorageException("Can't update " + file.toAbsolutePath(), file.toString(), e);
         }
@@ -84,19 +84,13 @@ public class StreamPathStorage extends AbstractStorage<Path> implements Serializ
         return Files.exists(file);
     }
 
+    //    protected List<Path> getPaths() {
     protected List<Path> getPaths() {
         try {
             return Files.list(directory).filter(e -> e.toFile().isFile()).collect(Collectors.toList());
+//            return Files.list(directory).filter(e -> e.toFile().isFile()).collect(Collectors.toList()).stream();
         } catch (IOException e) {
             throw new StorageException("Can't get files ", directory.toAbsolutePath().toString(), e);
         }
-    }
-
-    protected Resume read(InputStream is) throws IOException {
-        return strategy.read(is);
-    }
-
-    protected void write(OutputStream os, Resume resume) throws IOException {
-        strategy.write(os, resume);
     }
 }

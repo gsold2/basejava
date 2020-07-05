@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class StreamFileStorage extends AbstractStorage<File> implements Serializable {
+public class FileStorage extends AbstractStorage<File> implements Serializable {
 
     protected File directory;
     protected SerializationStrategy strategy;
 
-    protected StreamFileStorage(File directory, SerializationStrategy strategy) {
+    protected FileStorage(File directory, SerializationStrategy strategy) {
         Objects.requireNonNull(directory, " directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.toString() + " is not directory");
@@ -33,7 +33,7 @@ public class StreamFileStorage extends AbstractStorage<File> implements Serializ
     @Override
     protected Resume getItem(File file) {
         try {
-            return read(new BufferedInputStream(new FileInputStream(file)));
+            return strategy.read(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("Can't read " + file.getAbsolutePath(), file.getName(), e);
         }
@@ -41,7 +41,13 @@ public class StreamFileStorage extends AbstractStorage<File> implements Serializ
 
     @Override
     protected void saveItem(File file, Resume resume) {
-        updateItem(file, resume);
+        try {
+            if (file.createNewFile()) {
+                updateItem(file, resume);
+            }
+        } catch (IOException e) {
+            throw new StorageException("Can't create " + file.getAbsolutePath(), file.getName(), e);
+        }
     }
 
     @Override
@@ -54,7 +60,7 @@ public class StreamFileStorage extends AbstractStorage<File> implements Serializ
     @Override
     protected void updateItem(File file, Resume resume) {
         try {
-            write(new BufferedOutputStream(new FileOutputStream(file)), resume);
+            strategy.write(new BufferedOutputStream(new FileOutputStream(file)), resume);
         } catch (IOException e) {
             throw new StorageException("Can't update " + file.getAbsolutePath(), file.getName(), e);
         }
@@ -95,13 +101,5 @@ public class StreamFileStorage extends AbstractStorage<File> implements Serializ
                 }
         }
         return getFiles;
-    }
-
-    protected Resume read(InputStream is) throws IOException {
-        return strategy.read(is);
-    }
-
-    protected void write(OutputStream os, Resume resume) throws IOException {
-        strategy.write(os, resume);
     }
 }

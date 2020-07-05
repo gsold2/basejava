@@ -5,7 +5,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.io.*;
 
-public class StreamStrategy implements SerializationStrategy {
+public class StreamSerialization implements SerializationStrategy {
 
     @Override
     public Resume read(InputStream is) throws IOException {
