@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> implements Serializable {
 
@@ -66,7 +67,7 @@ public class PathStorage extends AbstractStorage<Path> implements Serializable {
 
     @Override
     protected List<Resume> getList() {
-        return getPaths().stream().map(this::getItem).collect(Collectors.toList());
+        return getPaths().map(this::getItem).collect(Collectors.toList());
     }
 
     @Override
@@ -76,7 +77,7 @@ public class PathStorage extends AbstractStorage<Path> implements Serializable {
 
     @Override
     public int size() {
-        return getPaths().size();
+        return (int) getPaths().count();
     }
 
     @Override
@@ -84,11 +85,9 @@ public class PathStorage extends AbstractStorage<Path> implements Serializable {
         return Files.exists(file);
     }
 
-    //    protected List<Path> getPaths() {
-    protected List<Path> getPaths() {
+    protected Stream<Path> getPaths() {
         try {
-            return Files.list(directory).filter(e -> e.toFile().isFile()).collect(Collectors.toList());
-//            return Files.list(directory).filter(e -> e.toFile().isFile()).collect(Collectors.toList()).stream();
+            return Files.list(directory).filter(e -> e.toFile().isFile());
         } catch (IOException e) {
             throw new StorageException("Can't get files ", directory.toAbsolutePath().toString(), e);
         }
