@@ -35,7 +35,7 @@ public class FileStorage extends AbstractStorage<File> implements Serializable {
         try {
             return strategy.read(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
-            throw new StorageException("Can't read " + file.getAbsolutePath(), file.getName(), e);
+            throw new StorageException("File read error " + file.toString(), e);
         }
     }
 
@@ -46,14 +46,14 @@ public class FileStorage extends AbstractStorage<File> implements Serializable {
                 updateItem(file, resume);
             }
         } catch (IOException e) {
-            throw new StorageException("Can't create " + file.getAbsolutePath(), file.getName(), e);
+            throw new StorageException("File create error " + file.toString(), e);
         }
     }
 
     @Override
     protected void deleteItem(File file) {
         if (!file.delete()) {
-            throw new StorageException("File delete error ", file.getName());
+            throw new StorageException("File delete error " + file.toString());
         }
     }
 
@@ -62,14 +62,14 @@ public class FileStorage extends AbstractStorage<File> implements Serializable {
         try {
             strategy.write(new BufferedOutputStream(new FileOutputStream(file)), resume);
         } catch (IOException e) {
-            throw new StorageException("Can't update " + file.getAbsolutePath(), file.getName(), e);
+            throw new StorageException("File update error " + file.toString(), e);
         }
     }
 
     @Override
     protected List<Resume> getList() {
         List<Resume> resumes = new ArrayList<>();
-        for (File file : getFiles()) {
+        for (File file : getFilesList()) {
             resumes.add(getItem(file));
         }
         return resumes;
@@ -77,14 +77,14 @@ public class FileStorage extends AbstractStorage<File> implements Serializable {
 
     @Override
     public void clear() {
-        for (File file : getFiles()) {
+        for (File file : getFilesList()) {
             deleteItem(file);
         }
     }
 
     @Override
     public int size() {
-        return getFiles().size();
+        return getFilesList().size();
     }
 
     @Override
@@ -92,13 +92,15 @@ public class FileStorage extends AbstractStorage<File> implements Serializable {
         return file.exists();
     }
 
-    protected List<File> getFiles() {
+    protected List<File> getFilesList() {
         List<File> getFiles = new ArrayList<>();
         if (directory.listFiles() != null) {
             for (File file : directory.listFiles())
                 if (file.isFile()) {
                     getFiles.add(file);
                 }
+        } else {
+            throw new StorageException("Files get error " + directory.getAbsolutePath());
         }
         return getFiles;
     }

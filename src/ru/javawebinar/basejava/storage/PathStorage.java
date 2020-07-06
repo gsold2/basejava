@@ -34,62 +34,71 @@ public class PathStorage extends AbstractStorage<Path> implements Serializable {
     }
 
     @Override
-    protected Resume getItem(Path file) {
+    protected Resume getItem(Path path) {
         try {
-            return strategy.read(new BufferedInputStream(Files.newInputStream(file)));
+            return strategy.read(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
-            throw new StorageException("Can't read " + file.toAbsolutePath(), file.toString(), e);
+            throw new StorageException("File read error " + getFileName(path), e);
         }
     }
 
     @Override
-    protected void saveItem(Path file, Resume resume) {
-        updateItem(file, resume);
-    }
-
-    @Override
-    protected void deleteItem(Path file) {
+    protected void saveItem(Path path, Resume resume) {
         try {
-            Files.delete(file);
+            Files.createFile(path);
+            updateItem(path, resume);
         } catch (IOException e) {
-            throw new StorageException("File delete error ", file.toString(), e);
+            throw new StorageException("File save error " + getFileName(path), e);
         }
     }
 
     @Override
-    protected void updateItem(Path file, Resume resume) {
+    protected void deleteItem(Path path) {
         try {
-            strategy.write(new BufferedOutputStream(Files.newOutputStream(file)), resume);
+            Files.delete(path);
         } catch (IOException e) {
-            throw new StorageException("Can't update " + file.toAbsolutePath(), file.toString(), e);
+            throw new StorageException("File delete error " + getFileName(path), e);
+        }
+    }
+
+    @Override
+    protected void updateItem(Path path, Resume resume) {
+        try {
+            strategy.write(new BufferedOutputStream(Files.newOutputStream(path)), resume);
+        } catch (IOException e) {
+            throw new StorageException("File update error " + getFileName(path), e);
         }
     }
 
     @Override
     protected List<Resume> getList() {
-        return getPaths().map(this::getItem).collect(Collectors.toList());
+        return getPathsList().map(this::getItem).collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        getPaths().forEach(this::deleteItem);
+        getPathsList().forEach(this::deleteItem);
     }
 
     @Override
     public int size() {
-        return (int) getPaths().count();
+        return (int) getPathsList().count();
     }
 
     @Override
-    protected boolean isItemExist(Path file) {
-        return Files.exists(file);
+    protected boolean isItemExist(Path path) {
+        return Files.isRegularFile(path);
     }
 
-    protected Stream<Path> getPaths() {
+    protected Stream<Path> getPathsList() {
         try {
             return Files.list(directory).filter(e -> e.toFile().isFile());
         } catch (IOException e) {
-            throw new StorageException("Can't get files ", directory.toAbsolutePath().toString(), e);
+            throw new StorageException("Files get error " + directory.toAbsolutePath(), e);
         }
+    }
+
+    protected String getFileName(Path path) {
+        return path.getFileName().toString();
     }
 }
