@@ -5,7 +5,18 @@ import java.util.Objects;
 
 public class TextSection extends AbstractSection implements Serializable {
 
-    private final String content;
+    private String content;
+
+    public TextSection() {
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public TextSection(String content) {
         Objects.requireNonNull(content, "text must not be null");

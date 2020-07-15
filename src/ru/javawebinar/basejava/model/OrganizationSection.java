@@ -7,11 +7,23 @@ import java.util.Objects;
 
 public class OrganizationSection extends AbstractSection implements Serializable {
 
-    private final List<Organization> organizations;
+    private List<Organization> organizations;
+
+    public OrganizationSection() {
+    }
 
     public OrganizationSection(Organization... organizations) {
         Objects.requireNonNull(organizations, "list must not be null");
         this.organizations = Arrays.asList(organizations);
+    }
+
+    public OrganizationSection(List<Organization> organizations) {
+        Objects.requireNonNull(organizations, "list must not be null");
+        this.organizations = organizations;
+    }
+
+    public List<Organization> getOrganizations() {
+        return organizations;
     }
 
     @Override

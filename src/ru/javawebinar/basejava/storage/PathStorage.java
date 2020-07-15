@@ -46,10 +46,10 @@ public class PathStorage extends AbstractStorage<Path> implements Serializable {
     protected void saveItem(Path path, Resume resume) {
         try {
             Files.createFile(path);
-            updateItem(path, resume);
         } catch (IOException e) {
             throw new StorageException("File save error " + getFileName(path), e);
         }
+        updateItem(path, resume);
     }
 
     @Override

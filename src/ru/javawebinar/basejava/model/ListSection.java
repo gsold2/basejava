@@ -7,11 +7,27 @@ import java.util.Objects;
 
 public class ListSection extends AbstractSection implements Serializable {
 
-    private final List<String> items;
+    private List<String> items;
+
+    public ListSection() {
+    }
 
     public ListSection(String... items) {
         Objects.requireNonNull(items, "list must not be null");
         this.items = Arrays.asList(items);
+    }
+
+    public ListSection(List<String> items) {
+        Objects.requireNonNull(items, "list must not be null");
+        this.items = items;
+    }
+
+    public List<String> getItems() {
+        return items;
+    }
+
+    public void setItems(List<String> items) {
+        this.items = items;
     }
 
     @Override
