@@ -15,10 +15,10 @@ public enum ContactType {
         this.titel = titel;
     }
 
-    @Override
-    public String toString() {
-        return "ContactType{" +
-                "titel='" + titel + '\'' +
-                '}' + '\n';
-    }
+//    @Override
+//    public String toString() {
+//        return "ContactType{" +
+//                "titel='" + titel + '\'' +
+//                '}' + '\n';
+//    }
 }

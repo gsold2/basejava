@@ -14,10 +14,10 @@ public enum SectionType {
         this.titel = titel;
     }
 
-    @Override
-    public String toString() {
-        return "SectionType{" +
-                "titel='" + titel + '\'' +
-                '}' + '\n';
-    }
+//    @Override
+//    public String toString() {
+//        return "SectionType{" +
+//                "titel='" + titel + '\'' +
+//                '}' + '\n';
+//    }
 }
