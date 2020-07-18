@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class DataStreamSerialization implements SerializationStrategy {
 
+
     @Override
     public Resume read(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
@@ -60,25 +61,38 @@ public class DataStreamSerialization implements SerializationStrategy {
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContact();
             dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            }
+            contacts.entrySet().forEach(entry -> writeContact(dos, entry));
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                AbstractSection section = entry.getValue();
-                dos.writeUTF(section.getClass().getSimpleName());
-                if (section instanceof TextSection) {
-                    writeTextSection(dos, (TextSection) section);
-                } else if (section instanceof ListSection) {
-                    writeListSection(dos, (ListSection) section);
-                } else if (section instanceof OrganizationSection) {
-                    writeOrganizationSection(dos, (OrganizationSection) section);
-                }
-            }
+            sections.entrySet().forEach(entry -> writeSection(dos, entry));
         }
+    }
+
+    public void writeContact(DataOutputStream dos, Map.Entry<ContactType, String> entry) {
+        try {
+            dos.writeUTF(entry.getKey().name());
+            dos.writeUTF(entry.getValue());
+        } catch (IOException e) {
+            throw new StorageException("Can't serialize Contact", e);
+        }
+    }
+
+    public void writeSection(DataOutputStream dos, Map.Entry<SectionType, AbstractSection> entry) {
+        try {
+            dos.writeUTF(entry.getKey().name());
+            AbstractSection section = entry.getValue();
+            dos.writeUTF(section.getClass().getSimpleName());
+            if (section instanceof TextSection) {
+                writeTextSection(dos, (TextSection) section);
+            } else if (section instanceof ListSection) {
+                writeListSection(dos, (ListSection) section);
+            } else if (section instanceof OrganizationSection) {
+                writeOrganizationSection(dos, (OrganizationSection) section);
+            }
+        } catch (IOException e) {
+            throw new StorageException("Can't serialize Section", e);
+        }
+
     }
 
     public void writeTextSection(DataOutputStream dos, TextSection textSection) {
