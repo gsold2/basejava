@@ -13,11 +13,4 @@ public enum SectionType {
     SectionType(String titel) {
         this.titel = titel;
     }
-
-//    @Override
-//    public String toString() {
-//        return "SectionType{" +
-//                "titel='" + titel + '\'' +
-//                '}' + '\n';
-//    }
 }

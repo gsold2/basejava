@@ -6,7 +6,7 @@ import java.io.*;
 
 public interface SerializationStrategy {
 
-    Resume read(InputStream is) throws IOException ;
+    Resume read(InputStream is) throws IOException;
 
-    void write(OutputStream os, Resume resume) throws IOException ;
+    void write(OutputStream os, Resume resume) throws IOException;
 }

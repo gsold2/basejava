@@ -11,7 +11,7 @@ public class JsonStreamSerialization implements SerializationStrategy {
     @Override
     public Resume read(InputStream is) throws IOException {
         try (Reader r = new InputStreamReader(is, StandardCharsets.UTF_8)) {
-            return (Resume) JsonParser.read(r, Resume.class);
+            return JsonParser.read(r, Resume.class);
         }
     }
 

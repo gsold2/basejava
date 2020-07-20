@@ -10,7 +10,6 @@ import java.io.Writer;
 public class JsonParser {
     private static Gson GSON = new GsonBuilder()
             .registerTypeAdapter(AbstractSection.class, new JsonSectionAdapter())
-            .disableHtmlEscaping()
             .create();
 
     public static <T> T read(Reader reader, Class<T> clazz) {

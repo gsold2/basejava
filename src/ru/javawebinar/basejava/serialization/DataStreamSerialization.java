@@ -11,7 +11,6 @@ import java.util.Map;
 
 public class DataStreamSerialization implements SerializationStrategy {
 
-
     @Override
     public Resume read(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
@@ -23,31 +22,32 @@ public class DataStreamSerialization implements SerializationStrategy {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
             size = dis.readInt();
-            SectionType sectionType;
-            String section;
             for (int i = 0; i < size; i++) {
-                sectionType = SectionType.valueOf(dis.readUTF());
-                section = dis.readUTF();
-                if (section.equals("TextSection")) {
-                    resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                }
-                if (section.equals("ListSection")) {
-                    List<String> items = new ArrayList<>();
-                    int count = dis.readInt();
-                    while (count > 0) {
-                        items.add(dis.readUTF());
-                        count--;
-                    }
-                    resume.addSection(sectionType, new ListSection(items));
-                }
-                if (section.equals("OrganizationSection")) {
-                    List<Organization> organizations = new ArrayList<>();
-                    int count = dis.readInt();
-                    while (count > 0) {
-                        readOrganizationSection(dis, organizations);
-                        count--;
-                    }
-                    resume.addSection(sectionType, new OrganizationSection(organizations));
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+                switch (dis.readUTF()) {
+                    case ("TextSection"):
+                        resume.addSection(sectionType, new TextSection(dis.readUTF()));
+                        break;
+                    case ("ListSection"):
+                        List<String> items = new ArrayList<>();
+                        int count = dis.readInt();
+                        while (count > 0) {
+                            items.add(dis.readUTF());
+                            count--;
+                        }
+                        resume.addSection(sectionType, new ListSection(items));
+                        break;
+                    case ("OrganizationSection"):
+                        List<Organization> organizations = new ArrayList<>();
+                        int count2 = dis.readInt();
+                        while (count2 > 0) {
+                            readOrganization(dis, organizations);
+                            count2--;
+                        }
+                        resume.addSection(sectionType, new OrganizationSection(organizations));
+                        break;
+                    default:
+                        throw new StorageException("Error read resume");
                 }
             }
             return resume;
@@ -61,111 +61,84 @@ public class DataStreamSerialization implements SerializationStrategy {
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContact();
             dos.writeInt(contacts.size());
-            contacts.entrySet().forEach(entry -> writeContact(dos, entry));
+            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+                writeContact(dos, entry);
+            }
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
-            sections.entrySet().forEach(entry -> writeSection(dos, entry));
+            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+                writeSection(dos, entry);
+            }
         }
     }
 
-    public void writeContact(DataOutputStream dos, Map.Entry<ContactType, String> entry) {
-        try {
-            dos.writeUTF(entry.getKey().name());
-            dos.writeUTF(entry.getValue());
-        } catch (IOException e) {
-            throw new StorageException("Can't serialize Contact", e);
-        }
+    public void writeContact(DataOutputStream dos, Map.Entry<ContactType, String> entry) throws IOException {
+        dos.writeUTF(entry.getKey().name());
+        dos.writeUTF(entry.getValue());
     }
 
-    public void writeSection(DataOutputStream dos, Map.Entry<SectionType, AbstractSection> entry) {
-        try {
-            dos.writeUTF(entry.getKey().name());
-            AbstractSection section = entry.getValue();
-            dos.writeUTF(section.getClass().getSimpleName());
-            if (section instanceof TextSection) {
-                writeTextSection(dos, (TextSection) section);
-            } else if (section instanceof ListSection) {
+    public void writeSection(DataOutputStream dos, Map.Entry<SectionType, AbstractSection> entry) throws IOException {
+        dos.writeUTF(entry.getKey().name());
+        AbstractSection section = entry.getValue();
+        dos.writeUTF(section.getClass().getSimpleName());
+        switch (section.getClass().getName()) {
+            case ("ru.javawebinar.basejava.model.TextSection"):
+                dos.writeUTF(((TextSection) section).getContent());
+                break;
+            case ("ru.javawebinar.basejava.model.ListSection"):
                 writeListSection(dos, (ListSection) section);
-            } else if (section instanceof OrganizationSection) {
-                writeOrganizationSection(dos, (OrganizationSection) section);
-            }
-        } catch (IOException e) {
-            throw new StorageException("Can't serialize Section", e);
-        }
-
-    }
-
-    public void writeTextSection(DataOutputStream dos, TextSection textSection) {
-        try {
-            dos.writeUTF(textSection.getContent());
-        } catch (IOException e) {
-            throw new StorageException("Can't serialize TextSection", e);
+                break;
+            case ("ru.javawebinar.basejava.model.OrganizationSection"):
+                writeOrganization(dos, (OrganizationSection) section);
+                break;
+            default:
+                throw new StorageException("Error write resume");
         }
     }
 
-    public void writeListSection(DataOutputStream dos, ListSection listSection) {
-        try {
-            dos.writeInt(listSection.getItems().size());
-            for (String str : listSection.getItems()) {
-                dos.writeUTF(str);
-            }
-        } catch (IOException e) {
-            throw new StorageException("Can't serialize ListSection", e);
+    public void writeListSection(DataOutputStream dos, ListSection listSection) throws IOException {
+        dos.writeInt(listSection.getItems().size());
+        for (String str : listSection.getItems()) {
+            dos.writeUTF(str);
         }
     }
 
-    public void writeOrganizationSection(DataOutputStream dos, OrganizationSection organizationSection) {
-        try {
-            dos.writeInt(organizationSection.getOrganizations().size());
-            for (Organization organizations : organizationSection.getOrganizations()) {
-                dos.writeUTF(organizations.getHomePage().getName());
-                dos.writeUTF(organizations.getHomePage().getUrl());
-                dos.writeInt(organizations.getPositions().size());
-                writeOrganizationPosition(dos, organizations);
-            }
-        } catch (IOException e) {
-            throw new StorageException("Can't serialize OrganizationSection", e);
+    public void writeOrganization(DataOutputStream dos, OrganizationSection organizationSection) throws IOException {
+        dos.writeInt(organizationSection.getOrganizations().size());
+        for (Organization organizations : organizationSection.getOrganizations()) {
+            dos.writeUTF(organizations.getHomePage().getName());
+            dos.writeUTF(organizations.getHomePage().getUrl());
+            dos.writeInt(organizations.getPositions().size());
+            writeOrganizationPosition(dos, organizations);
         }
     }
 
-    public void writeOrganizationPosition(DataOutputStream dos, Organization organizations) {
+    public void writeOrganizationPosition(DataOutputStream dos, Organization organizations) throws IOException {
         for (Organization.Position position : organizations.getPositions()) {
-            try {
-                dos.writeUTF(position.getStartData().toString());
-                dos.writeUTF(position.getEndData().toString());
-                dos.writeUTF(position.getSubTitel());
-                dos.writeUTF(position.getDescription());
-            } catch (IOException e) {
-                throw new StorageException("Can't serialize Position", e);
-            }
+            dos.writeUTF(position.getStartData().toString());
+            dos.writeUTF(position.getEndData().toString());
+            dos.writeUTF(position.getSubTitel());
+            dos.writeUTF(position.getDescription());
         }
     }
 
-    public void readOrganizationPosition(DataInputStream dis, List<Organization.Position> organizationPositions) {
-        try {
-            YearMonth startData = YearMonth.parse(dis.readUTF());
-            YearMonth endData = YearMonth.parse(dis.readUTF());
-            String subTitel = dis.readUTF();
-            String description = dis.readUTF();
-            organizationPositions.add(new Organization.Position(startData, endData, subTitel, description));
-        } catch (IOException e) {
-            throw new StorageException("Can't deserialize Position", e);
-        }
-    }
-
-    public void readOrganizationSection(DataInputStream dis, List<Organization> organizations) {
+    public void readOrganization(DataInputStream dis, List<Organization> organizations) throws IOException {
         List<Organization.Position> organizationPositions = new ArrayList<>();
-        try {
-            String name = dis.readUTF();
-            String url = dis.readUTF();
-            int count = dis.readInt();
-            while (count > 0) {
-                readOrganizationPosition(dis, organizationPositions);
-                count--;
-            }
-            organizations.add(new Organization(name, url, organizationPositions));
-        } catch (IOException e) {
-            throw new StorageException("Can't deserialize OrganizationSection", e);
+        String name = dis.readUTF();
+        String url = dis.readUTF();
+        int count = dis.readInt();
+        while (count > 0) {
+            readOrganizationPosition(dis, organizationPositions);
+            count--;
         }
+        organizations.add(new Organization(name, url, organizationPositions));
+    }
+
+    public void readOrganizationPosition(DataInputStream dis, List<Organization.Position> organizationPositions) throws IOException {
+        YearMonth startData = YearMonth.parse(dis.readUTF());
+        YearMonth endData = YearMonth.parse(dis.readUTF());
+        String subTitel = dis.readUTF();
+        String description = dis.readUTF();
+        organizationPositions.add(new Organization.Position(startData, endData, subTitel, description));
     }
 }
