@@ -93,11 +93,11 @@ public class DataStreamSerialization implements SerializationStrategy {
 
     public void writeOrganizationSection(DataOutputStream dos, OrganizationSection organizationSection) throws IOException {
         dos.writeInt(organizationSection.getOrganizations().size());
-        for (Organization organizations : organizationSection.getOrganizations()) {
-            dos.writeUTF(organizations.getHomePage().getName());
-            dos.writeUTF(organizations.getHomePage().getUrl());
-            dos.writeInt(organizations.getPositions().size());
-            writeOrganizationPosition(dos, organizations);
+        for (Organization organization : organizationSection.getOrganizations()) {
+            dos.writeUTF(organization.getHomePage().getName());
+            dos.writeUTF(organization.getHomePage().getUrl());
+            dos.writeInt(organization.getPositions().size());
+            writeOrganizationPosition(dos, organization);
         }
     }
 
