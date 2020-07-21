@@ -29,22 +29,10 @@ public class DataStreamSerialization implements SerializationStrategy {
                         resume.addSection(sectionType, new TextSection(dis.readUTF()));
                         break;
                     case ("ListSection"):
-                        List<String> items = new ArrayList<>();
-                        int count = dis.readInt();
-                        while (count > 0) {
-                            items.add(dis.readUTF());
-                            count--;
-                        }
-                        resume.addSection(sectionType, new ListSection(items));
+                        readListSection(resume, dis, sectionType);
                         break;
                     case ("OrganizationSection"):
-                        List<Organization> organizations = new ArrayList<>();
-                        int count2 = dis.readInt();
-                        while (count2 > 0) {
-                            readOrganization(dis, organizations);
-                            count2--;
-                        }
-                        resume.addSection(sectionType, new OrganizationSection(organizations));
+                        readOrganizationSection(resume, dis, sectionType);
                         break;
                     default:
                         throw new StorageException("Error read resume");
@@ -120,6 +108,27 @@ public class DataStreamSerialization implements SerializationStrategy {
             dos.writeUTF(position.getSubTitel());
             dos.writeUTF(position.getDescription());
         }
+    }
+
+    public void readListSection(Resume resume, DataInputStream dis, SectionType sectionType) throws IOException {
+        List<String> items = new ArrayList<>();
+        int count = dis.readInt();
+        while (count > 0) {
+            items.add(dis.readUTF());
+            count--;
+        }
+        resume.addSection(sectionType, new ListSection(items));
+    }
+
+    public void readOrganizationSection(Resume resume, DataInputStream dis, SectionType sectionType)
+            throws IOException {
+        List<Organization> organizations = new ArrayList<>();
+        int count2 = dis.readInt();
+        while (count2 > 0) {
+            readOrganization(dis, organizations);
+            count2--;
+        }
+        resume.addSection(sectionType, new OrganizationSection(organizations));
     }
 
     public void readOrganization(DataInputStream dis, List<Organization> organizations) throws IOException {
