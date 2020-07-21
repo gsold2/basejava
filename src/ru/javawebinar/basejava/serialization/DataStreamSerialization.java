@@ -21,7 +21,10 @@ public class DataStreamSerialization implements SerializationStrategy {
             for (int i = 0; i < size; i++) {
                 resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            readSections(resume, dis);
+            size = dis.readInt();
+            for (int i = 0; i < size; i++) {
+                readSection(resume, dis);
+            }
             return resume;
         }
     }
@@ -94,23 +97,20 @@ public class DataStreamSerialization implements SerializationStrategy {
         }
     }
 
-    public void readSections(Resume resume, DataInputStream dis) throws IOException {
-        int size = dis.readInt();
-        for (int i = 0; i < size; i++) {
-            SectionType sectionType = SectionType.valueOf(dis.readUTF());
-            switch (dis.readUTF()) {
-                case ("TextSection"):
-                    resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                    break;
-                case ("ListSection"):
-                    readListSection(resume, dis, sectionType);
-                    break;
-                case ("OrganizationSection"):
-                    readOrganizationSection(resume, dis, sectionType);
-                    break;
-                default:
-                    throw new StorageException("Error read resume");
-            }
+    public void readSection(Resume resume, DataInputStream dis) throws IOException {
+        SectionType sectionType = SectionType.valueOf(dis.readUTF());
+        switch (dis.readUTF()) {
+            case ("TextSection"):
+                resume.addSection(sectionType, new TextSection(dis.readUTF()));
+                break;
+            case ("ListSection"):
+                readListSection(resume, dis, sectionType);
+                break;
+            case ("OrganizationSection"):
+                readOrganizationSection(resume, dis, sectionType);
+                break;
+            default:
+                throw new StorageException("Error read resume");
         }
     }
 
