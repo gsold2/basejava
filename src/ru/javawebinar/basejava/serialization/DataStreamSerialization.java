@@ -77,7 +77,7 @@ public class DataStreamSerialization implements SerializationStrategy {
                 writeListSection(dos, (ListSection) section);
                 break;
             case ("ru.javawebinar.basejava.model.OrganizationSection"):
-                writeOrganization(dos, (OrganizationSection) section);
+                writeOrganizationSection(dos, (OrganizationSection) section);
                 break;
             default:
                 throw new StorageException("Error write resume");
@@ -91,7 +91,7 @@ public class DataStreamSerialization implements SerializationStrategy {
         }
     }
 
-    public void writeOrganization(DataOutputStream dos, OrganizationSection organizationSection) throws IOException {
+    public void writeOrganizationSection(DataOutputStream dos, OrganizationSection organizationSection) throws IOException {
         dos.writeInt(organizationSection.getOrganizations().size());
         for (Organization organizations : organizationSection.getOrganizations()) {
             dos.writeUTF(organizations.getHomePage().getName());
