@@ -9,14 +9,9 @@ import java.util.Objects;
 public class Link implements Serializable {
 
     protected String name;
-
     protected String url;
 
     public Link() {
-    }
-
-    public Link(String name) {
-        this(name, "");
     }
 
     public Link(String name, String url) {
@@ -37,13 +32,16 @@ public class Link implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Link link = (Link) o;
-        return name.equals(link.name);
+
+        return Objects.equals(name, link.name) &&
+                Objects.equals(url, link.url);
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return Objects.hash(name, url);
     }
 
     @Override

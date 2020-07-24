@@ -19,7 +19,7 @@ public class Organization implements Serializable {
     }
 
     public Organization(String name, Position... positions) {
-        this(name, "", positions);
+        this(name, null, positions);
     }
 
     public Organization(String name, String url, Position... positions) {
@@ -44,18 +44,14 @@ public class Organization implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Organization that = (Organization) o;
-
-        if (!homePage.equals(that.homePage)) return false;
-        return positions.equals(that.positions);
+        return Objects.equals(homePage, that.homePage) &&
+                Objects.equals(positions, that.positions);
     }
 
     @Override
     public int hashCode() {
-        int result = homePage.hashCode();
-        result = 31 * result + positions.hashCode();
-        return result;
+        return Objects.hash(homePage, positions);
     }
 
     @Override
@@ -69,6 +65,7 @@ public class Organization implements Serializable {
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
 
+
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private YearMonth startData;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
@@ -80,7 +77,7 @@ public class Organization implements Serializable {
         }
 
         public Position(YearMonth startData, YearMonth endData, String subTitel) {
-            this(startData, endData, subTitel, "");
+            this(startData, endData, subTitel, null);
         }
 
         public Position(YearMonth startData, YearMonth endData, String subTitel, String description) {
@@ -113,22 +110,16 @@ public class Organization implements Serializable {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-
             Position position = (Position) o;
-
-            if (!startData.equals(position.startData)) return false;
-            if (!endData.equals(position.endData)) return false;
-            if (!subTitel.equals(position.subTitel)) return false;
-            return description.equals(position.description);
+            return Objects.equals(startData, position.startData) &&
+                    Objects.equals(endData, position.endData) &&
+                    Objects.equals(subTitel, position.subTitel) &&
+                    Objects.equals(description, position.description);
         }
 
         @Override
         public int hashCode() {
-            int result = startData.hashCode();
-            result = 31 * result + endData.hashCode();
-            result = 31 * result + subTitel.hashCode();
-            result = 31 * result + description.hashCode();
-            return result;
+            return Objects.hash(startData, endData, subTitel, description);
         }
 
         @Override

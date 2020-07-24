@@ -6,8 +6,10 @@ import ru.javawebinar.basejava.model.*;
 import java.io.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class DataStreamSerialization implements SerializationStrategy {
 
@@ -39,6 +41,8 @@ public class DataStreamSerialization implements SerializationStrategy {
             for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
                 writeContact(dos, entry);
             }
+
+//            contacts.entrySet().forEach(throwingConsumerWrapper(i -> writeContact(dos, i)));
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
@@ -56,14 +60,14 @@ public class DataStreamSerialization implements SerializationStrategy {
         dos.writeUTF(entry.getKey().name());
         AbstractSection section = entry.getValue();
         dos.writeUTF(section.getClass().getSimpleName());
-        switch (section.getClass().getName()) {
-            case ("ru.javawebinar.basejava.model.TextSection"):
+        switch (section.getClass().getSimpleName()) {
+            case ("TextSection"):
                 dos.writeUTF(((TextSection) section).getContent());
                 break;
-            case ("ru.javawebinar.basejava.model.ListSection"):
+            case ("ListSection"):
                 writeListSection(dos, (ListSection) section);
                 break;
-            case ("ru.javawebinar.basejava.model.OrganizationSection"):
+            case ("OrganizationSection"):
                 writeOrganizationSection(dos, (OrganizationSection) section);
                 break;
             default:
@@ -82,7 +86,7 @@ public class DataStreamSerialization implements SerializationStrategy {
         dos.writeInt(organizationSection.getOrganizations().size());
         for (Organization organization : organizationSection.getOrganizations()) {
             dos.writeUTF(organization.getHomePage().getName());
-            dos.writeUTF(organization.getHomePage().getUrl());
+            dos.writeUTF(writeValue(organization.getHomePage().getUrl()));
             dos.writeInt(organization.getPositions().size());
             writeOrganizationPosition(dos, organization);
         }
@@ -93,8 +97,12 @@ public class DataStreamSerialization implements SerializationStrategy {
             dos.writeUTF(position.getStartData().toString());
             dos.writeUTF(position.getEndData().toString());
             dos.writeUTF(position.getSubTitel());
-            dos.writeUTF(position.getDescription());
+            dos.writeUTF(writeValue(position.getDescription()));
         }
+    }
+
+    public String writeValue(String value) {
+        return value != null ? value : "null";
     }
 
     public void readSection(Resume resume, DataInputStream dis) throws IOException {
@@ -127,10 +135,10 @@ public class DataStreamSerialization implements SerializationStrategy {
     public void readOrganizationSection(Resume resume, DataInputStream dis, SectionType sectionType)
             throws IOException {
         List<Organization> organizations = new ArrayList<>();
-        int count2 = dis.readInt();
-        while (count2 > 0) {
+        int count = dis.readInt();
+        while (count > 0) {
             readOrganization(dis, organizations);
-            count2--;
+            count--;
         }
         resume.addSection(sectionType, new OrganizationSection(organizations));
     }
@@ -138,7 +146,7 @@ public class DataStreamSerialization implements SerializationStrategy {
     public void readOrganization(DataInputStream dis, List<Organization> organizations) throws IOException {
         List<Organization.Position> organizationPositions = new ArrayList<>();
         String name = dis.readUTF();
-        String url = dis.readUTF();
+        String url = readValue(dis.readUTF());
         int count = dis.readInt();
         while (count > 0) {
             readOrganizationPosition(dis, organizationPositions);
@@ -151,7 +159,29 @@ public class DataStreamSerialization implements SerializationStrategy {
         YearMonth startData = YearMonth.parse(dis.readUTF());
         YearMonth endData = YearMonth.parse(dis.readUTF());
         String subTitel = dis.readUTF();
-        String description = dis.readUTF();
+        String description = readValue(dis.readUTF());
         organizationPositions.add(new Organization.Position(startData, endData, subTitel, description));
     }
+
+    public String readValue(String value) {
+        return value.equals("null") ? null : value;
+    }
+
+    @FunctionalInterface
+    public interface ThrowingConsumer<T, E extends Exception> {
+        void accept(T t) throws E;
+    }
+
+    static <T> Consumer<T> throwingConsumerWrapper(
+            ThrowingConsumer<T, Exception> throwingConsumer) {
+
+        return i -> {
+            try {
+                throwingConsumer.accept(i);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        };
+    }
+
 }
