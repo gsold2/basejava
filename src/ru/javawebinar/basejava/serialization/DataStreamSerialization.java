@@ -6,7 +6,6 @@ import ru.javawebinar.basejava.model.*;
 import java.io.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -38,16 +37,10 @@ public class DataStreamSerialization implements SerializationStrategy {
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContact();
             dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                writeContact(dos, entry);
-            }
-
-//            contacts.entrySet().forEach(throwingConsumerWrapper(i -> writeContact(dos, i)));
+            contacts.entrySet().forEach(writeWithException(entry -> writeContact(dos, entry)));
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
-                writeSection(dos, entry);
-            }
+            sections.entrySet().forEach(writeWithException(entry -> writeSection(dos, entry)));
         }
     }
 
@@ -103,6 +96,23 @@ public class DataStreamSerialization implements SerializationStrategy {
 
     public String writeValue(String value) {
         return value != null ? value : "null";
+    }
+
+    @FunctionalInterface
+    public interface ThrowingConsumer<T, E extends IOException> {
+        void accept(T t) throws E;
+    }
+
+    static <T> Consumer<T> writeWithException(
+            ThrowingConsumer<T, IOException> throwingConsumer) {
+
+        return i -> {
+            try {
+                throwingConsumer.accept(i);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        };
     }
 
     public void readSection(Resume resume, DataInputStream dis) throws IOException {
@@ -166,22 +176,4 @@ public class DataStreamSerialization implements SerializationStrategy {
     public String readValue(String value) {
         return value.equals("null") ? null : value;
     }
-
-    @FunctionalInterface
-    public interface ThrowingConsumer<T, E extends Exception> {
-        void accept(T t) throws E;
-    }
-
-    static <T> Consumer<T> throwingConsumerWrapper(
-            ThrowingConsumer<T, Exception> throwingConsumer) {
-
-        return i -> {
-            try {
-                throwingConsumer.accept(i);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
-            }
-        };
-    }
-
 }
