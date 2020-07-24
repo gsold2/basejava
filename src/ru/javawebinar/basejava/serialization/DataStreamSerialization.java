@@ -109,7 +109,7 @@ public class DataStreamSerialization implements SerializationStrategy {
         return i -> {
             try {
                 throwingConsumer.accept(i);
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
         };
