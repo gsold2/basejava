@@ -6,9 +6,9 @@ import ru.javawebinar.basejava.model.*;
 import java.io.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class DataStreamSerialization implements SerializationStrategy {
 
@@ -37,10 +37,10 @@ public class DataStreamSerialization implements SerializationStrategy {
             dos.writeUTF(resume.getFullName());
             Map<ContactType, String> contacts = resume.getContact();
             dos.writeInt(contacts.size());
-            contacts.entrySet().forEach(writeWithException(entry -> writeContact(dos, entry)));
+            writeWithException(contacts.entrySet(), entry -> writeContact(dos, entry));
             Map<SectionType, AbstractSection> sections = resume.getSections();
             dos.writeInt(sections.size());
-            sections.entrySet().forEach(writeWithException(entry -> writeSection(dos, entry)));
+            writeWithException(sections.entrySet(), entry -> writeSection(dos, entry));
         }
     }
 
@@ -50,17 +50,20 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     public void writeSection(DataOutputStream dos, Map.Entry<SectionType, AbstractSection> entry) throws IOException {
-        dos.writeUTF(entry.getKey().name());
+        SectionType sectionType = entry.getKey();
+        dos.writeUTF(sectionType.name());
         AbstractSection section = entry.getValue();
-        dos.writeUTF(section.getClass().getSimpleName());
-        switch (section.getClass().getSimpleName()) {
-            case ("TextSection"):
+        switch (sectionType) {
+            case PERSONAL:
+            case OBJECTIVE:
                 dos.writeUTF(((TextSection) section).getContent());
                 break;
-            case ("ListSection"):
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
                 writeListSection(dos, (ListSection) section);
                 break;
-            case ("OrganizationSection"):
+            case EXPERIENCE:
+            case EDUCATION:
                 writeOrganizationSection(dos, (OrganizationSection) section);
                 break;
             default:
@@ -99,32 +102,30 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     @FunctionalInterface
-    public interface ThrowingConsumer<T, E extends IOException> {
+    public interface FunctionWithExceptions<T, E extends Throwable> {
         void accept(T t) throws E;
     }
 
-    static <T> Consumer<T> writeWithException(
-            ThrowingConsumer<T, IOException> throwingConsumer) {
-
-        return i -> {
-            try {
-                throwingConsumer.accept(i);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        };
+    public static <T, E extends Throwable> void writeWithException(Collection<T> source,
+                                                    FunctionWithExceptions<T, E> function) throws E {
+        for (T t : source) {
+            function.accept(t);
+        }
     }
 
     public void readSection(Resume resume, DataInputStream dis) throws IOException {
         SectionType sectionType = SectionType.valueOf(dis.readUTF());
-        switch (dis.readUTF()) {
-            case ("TextSection"):
+        switch (sectionType) {
+            case PERSONAL:
+            case OBJECTIVE:
                 resume.addSection(sectionType, new TextSection(dis.readUTF()));
                 break;
-            case ("ListSection"):
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
                 readListSection(resume, dis, sectionType);
                 break;
-            case ("OrganizationSection"):
+            case EXPERIENCE:
+            case EDUCATION:
                 readOrganizationSection(resume, dis, sectionType);
                 break;
             default:
