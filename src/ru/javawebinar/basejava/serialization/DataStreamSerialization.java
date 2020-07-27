@@ -102,12 +102,12 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     @FunctionalInterface
-    public interface FunctionWithExceptions<T, E extends Throwable> {
-        void accept(T t) throws E;
+    public interface FunctionWithExceptions<T>{
+        void accept(T t) throws IOException;
     }
 
-    public static <T, E extends Throwable> void writeWithException(Collection<T> source,
-                                                    FunctionWithExceptions<T, E> function) throws E {
+    public static <T> void writeWithException(Collection<T> source,
+                                              FunctionWithExceptions<T> function) throws IOException {
         for (T t : source) {
             function.accept(t);
         }
@@ -166,7 +166,8 @@ public class DataStreamSerialization implements SerializationStrategy {
         organizations.add(new Organization(name, url, organizationPositions));
     }
 
-    public void readOrganizationPosition(DataInputStream dis, List<Organization.Position> organizationPositions) throws IOException {
+    public void readOrganizationPosition(DataInputStream dis,
+                                         List<Organization.Position> organizationPositions) throws IOException {
         YearMonth startData = YearMonth.parse(dis.readUTF());
         YearMonth endData = YearMonth.parse(dis.readUTF());
         String subTitel = dis.readUTF();
