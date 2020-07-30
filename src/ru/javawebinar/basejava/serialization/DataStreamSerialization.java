@@ -73,22 +73,18 @@ public class DataStreamSerialization implements SerializationStrategy {
     public void writeOrganizationSection(DataOutputStream dos, Organization organization) throws IOException {
         dos.writeUTF(organization.getHomePage().getName());
         dos.writeUTF(writeValue(organization.getHomePage().getUrl()));
-        writeWithException(dos, getOrganizationPosition(organization), dos::writeUTF);
+        writeWithException(dos, organization.getPositions(), position -> writeOrganizationPosition(dos, position));
+    }
+
+    public void writeOrganizationPosition(DataOutputStream dos, Organization.Position position) throws IOException {
+        dos.writeUTF(position.getStartData().toString());
+        dos.writeUTF(position.getEndData().toString());
+        dos.writeUTF(position.getSubTitel());
+        dos.writeUTF(writeValue(position.getDescription()));
     }
 
     public String writeValue(String value) {
         return value != null ? value : "null";
-    }
-
-    public List<String> getOrganizationPosition(Organization organization) {
-        List<String> positions = new ArrayList<>();
-        for (Organization.Position position : organization.getPositions()) {
-            positions.add(position.getStartData().toString());
-            positions.add(position.getEndData().toString());
-            positions.add(position.getSubTitel());
-            positions.add(writeValue(position.getDescription()));
-        }
-        return positions;
     }
 
     @FunctionalInterface
@@ -149,7 +145,7 @@ public class DataStreamSerialization implements SerializationStrategy {
         List<Organization.Position> organizationPositions = new ArrayList<>();
         String name = dis.readUTF();
         String url = readValue(dis.readUTF());
-        int count = dis.readInt() / 4;
+        int count = dis.readInt();
         while (count > 0) {
             readOrganizationPosition(dis, organizationPositions);
             count--;
