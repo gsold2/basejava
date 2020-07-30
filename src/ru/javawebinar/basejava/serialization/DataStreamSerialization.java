@@ -62,20 +62,18 @@ public class DataStreamSerialization implements SerializationStrategy {
                 break;
             case EXPERIENCE:
             case EDUCATION:
-                writeOrganizationSection(dos, (OrganizationSection) section);
+                writeWithException(dos, ((OrganizationSection) section).getOrganizations(),
+                        organization -> writeOrganizationSection(dos, organization));
                 break;
             default:
                 throw new StorageException("Error write resume");
         }
     }
 
-    public void writeOrganizationSection(DataOutputStream dos, OrganizationSection organizationSection) throws IOException {
-        dos.writeInt(organizationSection.getOrganizations().size());
-        for (Organization organization : organizationSection.getOrganizations()) {
-            dos.writeUTF(organization.getHomePage().getName());
-            dos.writeUTF(writeValue(organization.getHomePage().getUrl()));
-            writeWithException(dos, getOrganizationPosition(organization), dos::writeUTF);
-        }
+    public void writeOrganizationSection(DataOutputStream dos, Organization organization) throws IOException {
+        dos.writeUTF(organization.getHomePage().getName());
+        dos.writeUTF(writeValue(organization.getHomePage().getUrl()));
+        writeWithException(dos, getOrganizationPosition(organization), dos::writeUTF);
     }
 
     public String writeValue(String value) {
