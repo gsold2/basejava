@@ -18,14 +18,8 @@ public class DataStreamSerialization implements SerializationStrategy {
             String uuid = dis.readUTF();
             String FullName = dis.readUTF();
             Resume resume = new Resume(uuid, FullName);
-            int size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            size = dis.readInt();
-            for (int i = 0; i < size; i++) {
-                readSection(resume, dis);
-            }
+            readMapWithException(resume, dis, this::readContact);
+            readMapWithException(resume, dis, this::readSection);
             return resume;
         }
     }
@@ -84,7 +78,7 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     public String writeValue(String value) {
-        return value != null ? value : "null";
+        return value != null ? value : "";
     }
 
     @FunctionalInterface
@@ -98,6 +92,10 @@ public class DataStreamSerialization implements SerializationStrategy {
         for (T t : source) {
             function.accept(t);
         }
+    }
+
+    public void readContact(Resume resume, DataInputStream dis) throws IOException {
+        resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
     }
 
     public void readSection(Resume resume, DataInputStream dis) throws IOException {
@@ -122,22 +120,14 @@ public class DataStreamSerialization implements SerializationStrategy {
 
     public void readListSection(Resume resume, DataInputStream dis, SectionType sectionType) throws IOException {
         List<String> items = new ArrayList<>();
-        int count = dis.readInt();
-        while (count > 0) {
-            items.add(dis.readUTF());
-            count--;
-        }
+        readWithException(dis, items, item -> items.add(dis.readUTF()));
         resume.addSection(sectionType, new ListSection(items));
     }
 
     public void readOrganizationSection(Resume resume, DataInputStream dis, SectionType sectionType)
             throws IOException {
         List<Organization> organizations = new ArrayList<>();
-        int count = dis.readInt();
-        while (count > 0) {
-            readOrganization(dis, organizations);
-            count--;
-        }
+        readWithException(dis, organizations, organization -> readOrganization(dis, organizations));
         resume.addSection(sectionType, new OrganizationSection(organizations));
     }
 
@@ -145,11 +135,7 @@ public class DataStreamSerialization implements SerializationStrategy {
         List<Organization.Position> organizationPositions = new ArrayList<>();
         String name = dis.readUTF();
         String url = readValue(dis.readUTF());
-        int count = dis.readInt();
-        while (count > 0) {
-            readOrganizationPosition(dis, organizationPositions);
-            count--;
-        }
+        readWithException(dis, organizationPositions, position -> readOrganizationPosition(dis, organizationPositions));
         organizations.add(new Organization(name, url, organizationPositions));
     }
 
@@ -163,6 +149,28 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     public String readValue(String value) {
-        return value.equals("null") ? null : value;
+        return value.equals("") ? null : value;
+    }
+
+    public static <T> void readWithException(DataInputStream dis, Collection<T> source,
+                                             FunctionWithExceptions<Collection<T>> function) throws IOException {
+        int count = dis.readInt();
+        for (int i = 0; i < count; i++) {
+            function.accept(source);
+        }
+    }
+
+    @FunctionalInterface
+    public interface FunctionReadWithExceptions<Resume, DataInputStream> {
+        void accept(Resume resume, DataInputStream dis) throws IOException;
+    }
+
+    public static void readMapWithException(Resume resume, DataInputStream dis,
+                                            FunctionReadWithExceptions<Resume, DataInputStream> function)
+            throws IOException {
+        int count = dis.readInt();
+        for (int i = 0; i < count; i++) {
+            function.accept(resume, dis);
+        }
     }
 }
