@@ -5,10 +5,7 @@ import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStreamSerialization implements SerializationStrategy {
 
@@ -103,11 +100,12 @@ public class DataStreamSerialization implements SerializationStrategy {
         switch (sectionType) {
             case PERSONAL:
             case OBJECTIVE:
-                resume.addSection(sectionType, new TextSection(dis.readUTF()));
+                readTextSection(resume, dis, sectionType);
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 readListSection(resume, dis, sectionType);
+//                readListSection2(resume, dis, sectionType);
                 break;
             case EXPERIENCE:
             case EDUCATION:
@@ -118,11 +116,20 @@ public class DataStreamSerialization implements SerializationStrategy {
         }
     }
 
+    public void readTextSection(Resume resume, DataInputStream dis, SectionType sectionType) throws IOException {
+        resume.addSection(sectionType, new TextSection(dis.readUTF()));
+    }
+
     public void readListSection(Resume resume, DataInputStream dis, SectionType sectionType) throws IOException {
         List<String> items = new ArrayList<>();
         readWithException(dis, items, item -> items.add(dis.readUTF()));
         resume.addSection(sectionType, new ListSection(items));
     }
+
+//    public void readListSection2(Resume resume, DataInputStream dis, SectionType sectionType) throws IOException {
+//        List<String> items = getListWithException(dis, new String(), item -> dis.readUTF());
+//        resume.addSection(sectionType, new ListSection(items));
+//    }
 
     public void readOrganizationSection(Resume resume, DataInputStream dis, SectionType sectionType)
             throws IOException {
@@ -152,21 +159,36 @@ public class DataStreamSerialization implements SerializationStrategy {
         return value.equals("") ? null : value;
     }
 
-    public static <T> void readWithException(DataInputStream dis, Collection<T> source,
-                                             FunctionWithExceptions<Collection<T>> function) throws IOException {
+    public <T> void readWithException(DataInputStream dis, T t,
+                                      FunctionWithExceptions<T> function) throws IOException {
         int count = dis.readInt();
         for (int i = 0; i < count; i++) {
-            function.accept(source);
+            function.accept(t);
         }
     }
 
     @FunctionalInterface
-    public interface FunctionReadWithExceptions<Resume, DataInputStream> {
-        void accept(Resume resume, DataInputStream dis) throws IOException;
+    public interface getWithExceptions<T> {
+        T accept() throws IOException;
     }
 
-    public static void readMapWithException(Resume resume, DataInputStream dis,
-                                            FunctionReadWithExceptions<Resume, DataInputStream> function)
+    public <T> List<T> getListWithException(DataInputStream dis,
+                                            getWithExceptions<T> function) throws IOException {
+        int count = dis.readInt();
+        List<T> result = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            result.add(function.accept());
+        }
+        return result;
+    }
+
+    @FunctionalInterface
+    public interface FunctionReadWithExceptions<R, D> {
+        void accept(R r, D d) throws IOException;
+    }
+
+    public void readMapWithException(Resume resume, DataInputStream dis,
+                                     FunctionReadWithExceptions<Resume, DataInputStream> function)
             throws IOException {
         int count = dis.readInt();
         for (int i = 0; i < count; i++) {
