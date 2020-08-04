@@ -104,8 +104,8 @@ public class DataStreamSerialization implements SerializationStrategy {
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                readListSection(resume, dis, sectionType);
-//                readListSection2(resume, dis, sectionType);
+                List<String> items = getListWithException(dis, () -> dis.readUTF());
+                resume.addSection(sectionType, new ListSection(items));
                 break;
             case EXPERIENCE:
             case EDUCATION:
@@ -126,11 +126,6 @@ public class DataStreamSerialization implements SerializationStrategy {
         resume.addSection(sectionType, new ListSection(items));
     }
 
-//    public void readListSection2(Resume resume, DataInputStream dis, SectionType sectionType) throws IOException {
-//        List<String> items = getListWithException(dis, new String(), item -> dis.readUTF());
-//        resume.addSection(sectionType, new ListSection(items));
-//    }
-
     public void readOrganizationSection(Resume resume, DataInputStream dis, SectionType sectionType)
             throws IOException {
         List<Organization> organizations = new ArrayList<>();
@@ -139,9 +134,9 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     public void readOrganization(DataInputStream dis, List<Organization> organizations) throws IOException {
-        List<Organization.Position> organizationPositions = new ArrayList<>();
         String name = dis.readUTF();
         String url = readValue(dis.readUTF());
+        List<Organization.Position> organizationPositions = new ArrayList<>();
         readWithException(dis, organizationPositions, position -> readOrganizationPosition(dis, organizationPositions));
         organizations.add(new Organization(name, url, organizationPositions));
     }
@@ -154,6 +149,29 @@ public class DataStreamSerialization implements SerializationStrategy {
         String description = readValue(dis.readUTF());
         organizationPositions.add(new Organization.Position(startData, endData, subTitel, description));
     }
+
+    // Начинается
+    public void readOrganization2(DataInputStream dis, List<Organization> organizations) throws IOException {
+        String name = dis.readUTF();
+        String url = readValue(dis.readUTF());
+        List<Organization.Position> organizationPositions = new ArrayList<>();
+
+//        List<Organization.Position> organizationPositions =
+//                getListWithException(dis, readOrganizationPosition2(dis));
+
+//        readWithException(dis, organizationPositions, position -> readOrganizationPosition(dis, organizationPositions));
+        organizations.add(new Organization(name, url, organizationPositions));
+    }
+
+    public Organization.Position readOrganizationPosition2(DataInputStream dis) throws IOException {
+        YearMonth startData = YearMonth.parse(dis.readUTF());
+        YearMonth endData = YearMonth.parse(dis.readUTF());
+        String subTitel = dis.readUTF();
+        String description = readValue(dis.readUTF());
+//        organizationPositions.add(new Organization.Position(startData, endData, subTitel, description));
+        return new Organization.Position(startData, endData, subTitel, description);
+    }
+// Заканчивается
 
     public String readValue(String value) {
         return value.equals("") ? null : value;
