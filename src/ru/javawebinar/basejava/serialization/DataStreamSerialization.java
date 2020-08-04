@@ -79,12 +79,12 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     @FunctionalInterface
-    public interface FunctionWithExceptions<T> {
+    public interface ConsumerWithExceptions<T> {
         void accept(T t) throws IOException;
     }
 
     public static <T> void writeWithException(DataOutputStream dos, Collection<T> source,
-                                              FunctionWithExceptions<T> function) throws IOException {
+                                              ConsumerWithExceptions<T> function) throws IOException {
         dos.writeInt(source.size());
         for (T t : source) {
             function.accept(t);
@@ -104,7 +104,7 @@ public class DataStreamSerialization implements SerializationStrategy {
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                List<String> items = getListWithException(dis, () -> dis.readUTF());
+                List<String> items = readWithException(dis, dis::readUTF);
                 resume.addSection(sectionType, new ListSection(items));
                 break;
             case EXPERIENCE:
@@ -120,78 +120,38 @@ public class DataStreamSerialization implements SerializationStrategy {
         resume.addSection(sectionType, new TextSection(dis.readUTF()));
     }
 
-    public void readListSection(Resume resume, DataInputStream dis, SectionType sectionType) throws IOException {
-        List<String> items = new ArrayList<>();
-        readWithException(dis, items, item -> items.add(dis.readUTF()));
-        resume.addSection(sectionType, new ListSection(items));
-    }
-
     public void readOrganizationSection(Resume resume, DataInputStream dis, SectionType sectionType)
             throws IOException {
-        List<Organization> organizations = new ArrayList<>();
-        readWithException(dis, organizations, organization -> readOrganization(dis, organizations));
+        List<Organization> organizations = readWithException(dis, () -> readOrganization(dis));
         resume.addSection(sectionType, new OrganizationSection(organizations));
     }
 
-    public void readOrganization(DataInputStream dis, List<Organization> organizations) throws IOException {
+    public Organization readOrganization(DataInputStream dis) throws IOException {
         String name = dis.readUTF();
         String url = readValue(dis.readUTF());
-        List<Organization.Position> organizationPositions = new ArrayList<>();
-        readWithException(dis, organizationPositions, position -> readOrganizationPosition(dis, organizationPositions));
-        organizations.add(new Organization(name, url, organizationPositions));
+        List<Organization.Position> organizationPositions = readWithException(dis, () -> readOrganizationPosition(dis));
+        return (new Organization(name, url, organizationPositions));
     }
 
-    public void readOrganizationPosition(DataInputStream dis,
-                                         List<Organization.Position> organizationPositions) throws IOException {
+    public Organization.Position readOrganizationPosition(DataInputStream dis) throws IOException {
         YearMonth startData = YearMonth.parse(dis.readUTF());
         YearMonth endData = YearMonth.parse(dis.readUTF());
         String subTitel = dis.readUTF();
         String description = readValue(dis.readUTF());
-        organizationPositions.add(new Organization.Position(startData, endData, subTitel, description));
+        return (new Organization.Position(startData, endData, subTitel, description));
     }
-
-    // Начинается
-    public void readOrganization2(DataInputStream dis, List<Organization> organizations) throws IOException {
-        String name = dis.readUTF();
-        String url = readValue(dis.readUTF());
-        List<Organization.Position> organizationPositions = new ArrayList<>();
-
-//        List<Organization.Position> organizationPositions =
-//                getListWithException(dis, readOrganizationPosition2(dis));
-
-//        readWithException(dis, organizationPositions, position -> readOrganizationPosition(dis, organizationPositions));
-        organizations.add(new Organization(name, url, organizationPositions));
-    }
-
-    public Organization.Position readOrganizationPosition2(DataInputStream dis) throws IOException {
-        YearMonth startData = YearMonth.parse(dis.readUTF());
-        YearMonth endData = YearMonth.parse(dis.readUTF());
-        String subTitel = dis.readUTF();
-        String description = readValue(dis.readUTF());
-//        organizationPositions.add(new Organization.Position(startData, endData, subTitel, description));
-        return new Organization.Position(startData, endData, subTitel, description);
-    }
-// Заканчивается
 
     public String readValue(String value) {
         return value.equals("") ? null : value;
     }
 
-    public <T> void readWithException(DataInputStream dis, T t,
-                                      FunctionWithExceptions<T> function) throws IOException {
-        int count = dis.readInt();
-        for (int i = 0; i < count; i++) {
-            function.accept(t);
-        }
-    }
-
     @FunctionalInterface
-    public interface getWithExceptions<T> {
+    public interface SupplierWithExceptions<T> {
         T accept() throws IOException;
     }
 
-    public <T> List<T> getListWithException(DataInputStream dis,
-                                            getWithExceptions<T> function) throws IOException {
+    public <T> List<T> readWithException(DataInputStream dis,
+                                         SupplierWithExceptions<T> function) throws IOException {
         int count = dis.readInt();
         List<T> result = new ArrayList<>();
         for (int i = 0; i < count; i++) {
