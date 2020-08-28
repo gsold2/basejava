@@ -161,7 +161,7 @@ public class DataStreamSerialization implements SerializationStrategy {
     protected <T> List<T> readWithException(DataInputStream dis,
                                             SupplierWithExceptions<T> function) throws IOException {
         int count = dis.readInt();
-        List<T> result = new ArrayList<>();
+        List<T> result = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             result.add(function.accept());
         }

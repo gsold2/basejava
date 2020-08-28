@@ -1,38 +1,30 @@
 package ru.javawebinar.basejava;
 
 public class MainDeadLock {
-
-    public final static Object one = new Object(), two = new Object();
+    public final static Object one = new Object();
+    public final static Object two = new Object();
 
     public static void main(String[] args) {
+        ThreadWithParametrs(one, two);
+        ThreadWithParametrs(two, one);
+    }
 
-        Thread t1 = new Thread(() -> {
+    public static void ThreadWithParametrs(Object one, Object two) {
+        new Thread(() ->
+        {
+            System.out.println("Начало работы нити" + " -> " + Thread.currentThread().getName());
             synchronized (one) {
+                System.out.println(Thread.currentThread().getName() + " захватила " + one);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 synchronized (two) {
-                    System.out.println("Завершение работы t1");
+                    System.out.println(Thread.currentThread().getName() + " захватила " + two);
                 }
             }
-        });
-        Thread t2 = new Thread(() -> {
-            synchronized (two) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                synchronized (one) {
-                    System.out.println("Завершение работы t2");
-                }
-            }
-        });
-
-        t1.start();
-        t2.start();
+        }).start();
     }
 }
 
