@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 public class MainStream {
 
     public static void main(String[] args) {
-        int[] values = randomArrayWithInt(9, 4);
+        int[] values = randomArrayWithInt(9, 5);
         System.out.println(Arrays.toString(values));
 
         Arrays.stream(values).distinct()
@@ -45,9 +45,12 @@ public class MainStream {
     }
 
     static List<Integer> oddOrEven(List<Integer> integers) {
-        Map<Boolean, List<Integer>> result = integers
+        return integers
                 .stream()
-                .collect(Collectors.partitioningBy(x -> x % 2 == 0));
-        return result.get(result.get(false).size() % 2 != 0);
+                .collect(Collectors.collectingAndThen(
+                        Collectors.partitioningBy(x -> x % 2 == 0),
+                        (Map<Boolean, List<Integer>> result) ->
+                                result.get(result.get(false).size() % 2 != 0)
+                ));
     }
 }
