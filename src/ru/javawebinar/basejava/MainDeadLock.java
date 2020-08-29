@@ -5,11 +5,11 @@ public class MainDeadLock {
     public final static Object two = new Object();
 
     public static void main(String[] args) {
-        ThreadWithParametrs(one, two);
-        ThreadWithParametrs(two, one);
+        threadWithParametrs(one, two);
+        threadWithParametrs(two, one);
     }
 
-    public static void ThreadWithParametrs(Object one, Object two) {
+    public static void threadWithParametrs(Object one, Object two) {
         new Thread(() ->
         {
             System.out.println("Начало работы нити" + " -> " + Thread.currentThread().getName());

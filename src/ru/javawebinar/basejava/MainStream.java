@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class MainStream {
@@ -18,7 +17,7 @@ public class MainStream {
 
         System.out.println(Arrays
                 .stream(values)
-                .reduce(0, Integer::sum));
+                .sum());
         System.out.print(oddOrEven(Arrays
                 .stream(values)
                 .boxed()
@@ -38,30 +37,17 @@ public class MainStream {
     }
 
     static int minValue(int[] values) {
-        AtomicInteger count = new AtomicInteger();
-        AtomicInteger minValue = new AtomicInteger();
-        Arrays.stream(values).distinct()
+        return Arrays.stream(values).distinct()
                 .boxed()
-                .sorted(Collections.reverseOrder())
-                .forEach(i -> {
-                    minValue.addAndGet(i * (int) Math.pow(10, count.get()));
-                    count.incrementAndGet();
-                });
-        return minValue.get();
+                .sorted()
+                .reduce((first, second) -> first * 10 + second)
+                .get();
     }
 
     static List<Integer> oddOrEven(List<Integer> integers) {
-        AtomicInteger count = new AtomicInteger();
-        List<Integer> evenNumbers = new ArrayList<>();
-        List<Integer> notEvenNumbers = new ArrayList<>();
-        integers.forEach(integer -> {
-            if (integer % 2 == 0) {
-                evenNumbers.add(integer);
-            } else {
-                notEvenNumbers.add(integer);
-            }
-            count.addAndGet(integer);
-        });
-        return (count.get() % 2 == 0) ? notEvenNumbers : evenNumbers;
+        Map<Boolean, List<Integer>> result = integers
+                .stream()
+                .collect(Collectors.partitioningBy(x -> x % 2 == 0));
+        return result.get(result.get(false).size() % 2 != 0);
     }
 }
