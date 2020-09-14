@@ -40,8 +40,7 @@ public class MainStream {
         return Arrays.stream(values).distinct()
                 .boxed()
                 .sorted()
-                .reduce((first, second) -> first * 10 + second)
-                .get();
+                .reduce(0, (first, second) -> first * 10 + second);
     }
 
     static List<Integer> oddOrEven(List<Integer> integers) {
@@ -49,8 +48,10 @@ public class MainStream {
                 .stream()
                 .collect(Collectors.collectingAndThen(
                         Collectors.partitioningBy(x -> x % 2 == 0),
-                        (Map<Boolean, List<Integer>> result) ->
-                                result.get(result.get(false).size() % 2 != 0)
+                        (Map<Boolean, List<Integer>> result) -> {
+                            boolean x = result.get(false).size() % 2 != 0;
+                            return result.get(x);
+                        }
                 ));
     }
 }
