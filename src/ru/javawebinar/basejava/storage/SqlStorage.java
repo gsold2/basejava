@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class SqlStorage implements Storage {
-    public final SqlHelper sqlHelper;
+    private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
         this.sqlHelper = new SqlHelper(dbUrl, dbUser, dbPassword);
