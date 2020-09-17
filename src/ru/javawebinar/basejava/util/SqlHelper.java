@@ -10,12 +10,18 @@ import java.sql.SQLException;
 
 public class SqlHelper {
 
-    public void tryAndCatcher(ConnectionFactory connectionFactory){
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM resume")) {
-
-        } catch (SQLException e) {
-            throw new StorageException(e);
-        }
+    public SqlHelper() {
     }
+//
+//    protected interface ABlockOfCode<T> {
+//        T execute();
+//    }
+//
+//    public <T> void tryAndCatcher(ConnectionFactory connectionFactory, ABlockOfCode<T> ablockOfCode) {
+//        try (Connection conn = connectionFactory.getConnection()) {
+//            ablockOfCode.execute();
+//        } catch (SQLException e) {
+//            throw new StorageException(e);
+//        }
+//    }
 }
