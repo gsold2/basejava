@@ -3,11 +3,11 @@ package ru.javawebinar.basejava.storage;
 import org.postgresql.util.PSQLException;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SqlStorage implements Storage {
@@ -40,14 +40,10 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        sqlHelper.requstStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
+        sqlHelper.requstStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)", resume.getUuid(), ps -> {
             ps.setString(1, resume.getUuid());
-            try {
-                ps.setString(2, resume.getFullName());
-                ps.executeUpdate();
-            } catch (PSQLException e) {
-                throw new ExistStorageException(resume.getUuid());
-            }
+            ps.setString(2, resume.getFullName());
+            ps.executeUpdate();
             return null;
         });
     }
@@ -79,12 +75,11 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> storage = new ArrayList<>();
-        return sqlHelper.requstStatement("SELECT * FROM resume", ps -> {
+        return sqlHelper.requstStatement("SELECT * FROM resume ORDER BY uuid", ps -> {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                storage.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
+                storage.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
-            Collections.sort(storage);
             return storage;
         });
     }

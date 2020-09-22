@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
+import org.postgresql.util.PSQLException;
+import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.sql.ConnectionFactory;
 
@@ -23,6 +25,21 @@ public class SqlHelper {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(request)) {
             return function.execute(ps);
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
+    }
+
+    protected <T> T requstStatement(String request, String uuid, FunctionWithSQLException<T> function) {
+        try (Connection conn = connectionFactory.getConnection();
+             PreparedStatement ps = conn.prepareStatement(request)) {
+            return function.execute(ps);
+        } catch (PSQLException e) {
+            if (e.getSQLState().equals("23505")) {
+                throw new ExistStorageException(uuid);
+            } else {
+                throw new StorageException("PSQLException", uuid, e);
+            }
         } catch (SQLException e) {
             throw new StorageException(e);
         }
