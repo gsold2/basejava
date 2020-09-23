@@ -1,4 +1,4 @@
-package ru.javawebinar.basejava.storage;
+package ru.javawebinar.basejava.sql;
 
 import org.postgresql.util.PSQLException;
 import ru.javawebinar.basejava.exception.ExistStorageException;
@@ -17,11 +17,11 @@ public class SqlHelper {
         this.connectionFactory = () -> DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }
 
-    protected interface FunctionWithSQLException<T> {
+    public interface FunctionWithSQLException<T> {
         T execute(PreparedStatement ps) throws SQLException;
     }
 
-    protected <T> T requstStatement(String request, FunctionWithSQLException<T> function) {
+    public <T> T requstStatement(String request, FunctionWithSQLException<T> function) {
         try (Connection conn = connectionFactory.getConnection();
              PreparedStatement ps = conn.prepareStatement(request)) {
             return function.execute(ps);
