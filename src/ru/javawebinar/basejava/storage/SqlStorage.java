@@ -1,9 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
-import org.postgresql.util.PSQLException;
-import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.sql.*;
@@ -40,7 +37,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        sqlHelper.requstStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)", resume.getUuid(), ps -> {
+        sqlHelper.requstStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
             ps.setString(1, resume.getUuid());
             ps.setString(2, resume.getFullName());
             ps.executeUpdate();
@@ -74,8 +71,8 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> storage = new ArrayList<>();
         return sqlHelper.requstStatement("SELECT * FROM resume ORDER BY uuid", ps -> {
+            List<Resume> storage = new ArrayList<>();
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 storage.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));

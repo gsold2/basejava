@@ -26,22 +26,10 @@ public class SqlHelper {
              PreparedStatement ps = conn.prepareStatement(request)) {
             return function.execute(ps);
         } catch (SQLException e) {
-            throw new StorageException(e);
-        }
-    }
-
-    protected <T> T requstStatement(String request, String uuid, FunctionWithSQLException<T> function) {
-        try (Connection conn = connectionFactory.getConnection();
-             PreparedStatement ps = conn.prepareStatement(request)) {
-            return function.execute(ps);
-        } catch (PSQLException e) {
             if (e.getSQLState().equals("23505")) {
-                throw new ExistStorageException(uuid);
-            } else {
-                throw new StorageException("PSQLException", uuid, e);
+                throw new ExistStorageException("PSQLException " + e.getSQLState(), null);
             }
-        } catch (SQLException e) {
-            throw new StorageException(e);
+            throw new StorageException("PSQLException", e);
         }
     }
 }
