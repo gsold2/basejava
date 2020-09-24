@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.SqlHelper;
@@ -38,10 +39,15 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        sqlHelper.requstStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
+        sqlHelper.requstStatement("INSERT INTO resume (uuid, full_name) " +
+                "VALUES (?,?)" +
+                "ON CONFLICT DO NOTHING", ps -> {
             ps.setString(1, resume.getUuid());
             ps.setString(2, resume.getFullName());
-            ps.executeUpdate();
+            int rs = ps.executeUpdate();
+            if (rs == 0) {
+                throw new ExistStorageException(resume.getUuid());
+            }
             return null;
         });
     }
