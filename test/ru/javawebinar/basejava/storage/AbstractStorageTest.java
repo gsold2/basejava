@@ -12,22 +12,23 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class AbstractStorageTest {
 
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
     protected final Storage storage;
 
-    private static final String UUID_1 = "uuid1";
+    private static final String UUID_1 = UUID.randomUUID().toString();
     private static final Resume RESUME_1 = ResumeTestData.createResumeInstance(UUID_1, "name1");
 
-    private static final String UUID_2 = "uuid2";
+    private static final String UUID_2 = UUID.randomUUID().toString();
     private static final Resume RESUME_2 = ResumeTestData.createResumeInstance(UUID_2, "name2");
 
-    private static final String UUID_3 = "uuid3";
+    private static final String UUID_3 = UUID.randomUUID().toString();
     private static final Resume RESUME_3 = ResumeTestData.createResumeInstance(UUID_3, "name3");
 
-    private static final String UUID_4 = "uuid4";
+    private static final String UUID_4 = UUID.randomUUID().toString();
     private static final Resume RESUME_4 = ResumeTestData.createResumeInstance(UUID_4, "name2");
 
     public AbstractStorageTest(Storage storage) {
