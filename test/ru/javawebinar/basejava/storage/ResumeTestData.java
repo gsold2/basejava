@@ -14,13 +14,13 @@ public class ResumeTestData {
     public static Resume createResumeInstance(String uuid, String name) {
         Resume resume = new Resume(uuid, name);
 
-//        resume.getContact().put(ContactType.CELLPHONE, "+7(921) 855-0482");
-//        resume.getContact().put(ContactType.SKYPE, "grigory.kislin");
-//        resume.getContact().put(ContactType.EMAIL, "gkislin@yandex.ru");
-//        resume.getContact().put(ContactType.LINKENDIN, "");
-//        resume.getContact().put(ContactType.GITHUB, "");
-//        resume.getContact().put(ContactType.STACKOVERFLOW, "");
-//        resume.getContact().put(ContactType.HOMEPAGE, "");
+        resume.getContact().put(ContactType.CELLPHONE, "+7(921) 855-0482");
+        resume.getContact().put(ContactType.SKYPE, "grigory.kislin");
+        resume.getContact().put(ContactType.EMAIL, "gkislin@yandex.ru");
+        resume.getContact().put(ContactType.LINKENDIN, "");
+        resume.getContact().put(ContactType.GITHUB, "");
+        resume.getContact().put(ContactType.STACKOVERFLOW, "");
+        resume.getContact().put(ContactType.HOMEPAGE, "");
 //
 //        resume.getSections().put(SectionType.PERSONAL, new TextSection(
 //                "Ведущий стажировок и корпоративного обучения по Java Web и Enterprise технологиям"));
