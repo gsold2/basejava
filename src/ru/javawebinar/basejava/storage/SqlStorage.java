@@ -130,8 +130,8 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        Map<String, Resume> resumes = new HashMap<>();
-        sqlHelper.executeTransaction(conn -> {
+        return sqlHelper.executeTransaction(conn -> {
+            Map<String, Resume> resumes = new HashMap<>();
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT * FROM resume r")) {
                 ResultSet rs = ps.executeQuery();
@@ -151,11 +151,10 @@ public class SqlStorage implements Storage {
                     resumes.get(uuid).addContact(type, value);
                 }
             }
-            return null;
+            List<Resume> list = new ArrayList<>(resumes.values());
+            Collections.sort(list);
+            return list;
         });
-        List<Resume> list = new ArrayList<>(resumes.values());
-        Collections.sort(list);
-        return list;
     }
 
     @Override
