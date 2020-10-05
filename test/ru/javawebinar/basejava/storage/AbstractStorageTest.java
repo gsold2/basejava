@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.exception.*;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
@@ -19,8 +20,8 @@ public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
     protected final Storage storage;
 
-//    private static final String UUID_1 = UUID.randomUUID().toString();
-private static final String UUID_1 = "UUID_1";
+    //    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_1 = "UUID_1";
     private static final Resume RESUME_1 = ResumeTestData.createResumeInstance(UUID_1, "name1");
 
     private static final String UUID_2 = "UUID_2";
@@ -52,6 +53,9 @@ private static final String UUID_1 = "UUID_1";
 
     @Test
     public void update() {
+        RESUME_2.getContact().remove(ContactType.EMAIL);
+        RESUME_2.getContact().put(ContactType.CELLPHONE, "CELLPHONE-abracadabra");
+        RESUME_2.getContact().put(ContactType.SKYPE, "SKYPE-abracadabra");
         storage.update(RESUME_2);
         assertResume(RESUME_2);
         assertSize(3);
