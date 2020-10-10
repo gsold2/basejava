@@ -17,7 +17,7 @@ public class MapStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        if (!isExistedKey(resume.getUuid())) {
+        if (isExistedKey(resume.getUuid())) {
             storage.replace(resume.getUuid(), resume);
         }
     }
