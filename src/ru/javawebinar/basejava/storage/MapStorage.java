@@ -8,7 +8,7 @@ import java.util.*;
 
 public class MapStorage implements Storage {
 
-    private Map<String, Resume> storage = new LinkedHashMap<>();
+    private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     public void clear() {

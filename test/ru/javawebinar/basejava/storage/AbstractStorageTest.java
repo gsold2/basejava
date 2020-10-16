@@ -53,7 +53,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        RESUME_2.getContact().remove(ContactType.EMAIL);
+        Resume RESUME_2 = ResumeTestData.createResumeInstance(UUID_2, "name2-abracadabra");
         RESUME_2.getContact().put(ContactType.CELLPHONE, "CELLPHONE-abracadabra");
         RESUME_2.getContact().put(ContactType.SKYPE, "SKYPE-abracadabra");
         storage.update(RESUME_2);
