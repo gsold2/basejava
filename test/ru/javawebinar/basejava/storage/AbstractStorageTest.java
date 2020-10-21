@@ -13,7 +13,6 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public abstract class AbstractStorageTest {
 
@@ -54,8 +53,8 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() {
         Resume RESUME_2 = ResumeTestData.createResumeInstance(UUID_2, "name2-abracadabra");
-        RESUME_2.getContact().put(ContactType.CELLPHONE, "CELLPHONE-abracadabra");
-        RESUME_2.getContact().put(ContactType.SKYPE, "SKYPE-abracadabra");
+        RESUME_2.getContacts().put(ContactType.CELLPHONE, "CELLPHONE-abracadabra");
+        RESUME_2.getContacts().put(ContactType.SKYPE, "SKYPE-abracadabra");
         storage.update(RESUME_2);
         assertResume(RESUME_2);
         assertSize(3);

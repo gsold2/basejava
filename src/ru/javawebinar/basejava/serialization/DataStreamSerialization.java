@@ -26,7 +26,7 @@ public class DataStreamSerialization implements SerializationStrategy {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            Map<ContactType, String> contacts = resume.getContact();
+            Map<ContactType, String> contacts = resume.getContacts();
             writeWithException(dos, contacts.entrySet(), entry -> writeContact(dos, entry));
             Map<SectionType, AbstractSection> sections = resume.getSections();
             writeWithException(dos, sections.entrySet(), entry -> writeSection(dos, entry));

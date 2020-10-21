@@ -59,7 +59,7 @@ public class Resume implements Comparable<Resume>, Serializable {
         sections.put(type, section);
     }
 
-    public Map<ContactType, String> getContact() {
+    public Map<ContactType, String> getContacts() {
         return this.contacts;
     }
 
