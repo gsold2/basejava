@@ -77,7 +77,7 @@ public class ResumeTestData {
                         ("Родной русский, английский \"upper intermediate\"")));
 
         resume.getSections().put(SectionType.EXPERIENCE, new OrganizationSection(
-                new Organization("Java Online Projects",
+                new Organization("Java Online Projects", "https://dwg.ru/",
                         new Organization.Position(YearMonth.parse("2013-10"), YearMonth.now(), "Автор проекта.",
                                 "Создание, организация и проведение Java онлайн проектов и стажировок.")),
                 new Organization("Wrike", new Organization.Position(YearMonth.parse("2014-10"),

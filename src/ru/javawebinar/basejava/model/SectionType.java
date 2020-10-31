@@ -13,4 +13,8 @@ public enum SectionType {
     SectionType(String titel) {
         this.titel = titel;
     }
+
+    public String getTitel() {
+        return titel;
+    }
 }

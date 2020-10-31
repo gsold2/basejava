@@ -17,12 +17,17 @@
         <tr>
             <th>Имя</th>
             <th>Email</th>
+            <th>Delete</th>
+            <th>Edit</th>
         </tr>
-        <c:forEach items="${ resumes}" var="resume">
+        <c:forEach items="${resumes}" var="resume">
             <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume"/>
             <tr>
-                <td><a href="resume?uuid=${resume.uuid}">${resume.fullName}</a></td>
-                <td>${resume.getContact(ContactType.EMAIL)}</td>
+                <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
+<%--                <td>${resume.getContact(ContactType.EMAIL)}</td>--%>
+                <td><%=ContactType.EMAIL.toHtml(resume.getContact(ContactType.EMAIL))%></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=delete">Delete</a></td>
+                <td><a href="resume?uuid=${resume.uuid}&action=edit">Edit</a></td>
             </tr>
         </c:forEach>
     </table>
