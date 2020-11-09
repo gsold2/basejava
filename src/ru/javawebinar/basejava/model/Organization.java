@@ -12,6 +12,7 @@ import java.util.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
 
+    public static final Organization EMPTY = new Organization("", "", Position.EMPTY);
     private Link homePage;
     private List<Position> positions;
 
@@ -29,6 +30,11 @@ public class Organization implements Serializable {
 
     public Organization(String name, String url, List<Position> positions) {
         this.homePage = new Link(name, url);
+        this.positions = positions;
+    }
+
+    public Organization(Link homePage, List<Position> positions) {
+        this.homePage = homePage;
         this.positions = positions;
     }
 
@@ -66,6 +72,7 @@ public class Organization implements Serializable {
     public static class Position implements Serializable {
 
 
+        public static final Position EMPTY = new Position();
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private YearMonth startData;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
