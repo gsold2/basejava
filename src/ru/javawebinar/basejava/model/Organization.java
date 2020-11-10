@@ -74,35 +74,35 @@ public class Organization implements Serializable {
 
         public static final Position EMPTY = new Position();
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
-        private YearMonth startData;
+        private YearMonth startDate;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
-        private YearMonth endData;
+        private YearMonth endDate;
         private String subTitel;
         private String description;
 
         public Position() {
         }
 
-        public Position(YearMonth startData, YearMonth endData, String subTitel) {
-            this(startData, endData, subTitel, null);
+        public Position(YearMonth startDate, YearMonth endDate, String subTitel) {
+            this(startDate, endDate, subTitel, null);
         }
 
-        public Position(YearMonth startData, YearMonth endData, String subTitel, String description) {
-            Objects.requireNonNull(startData, "start must not be null");
-            Objects.requireNonNull(endData, "start must not be null");
+        public Position(YearMonth startDate, YearMonth endDate, String subTitel, String description) {
+            Objects.requireNonNull(startDate, "start must not be null");
+            Objects.requireNonNull(endDate, "start must not be null");
             Objects.requireNonNull(subTitel, "start must not be null");
-            this.startData = startData;
-            this.endData = endData;
+            this.startDate = startDate;
+            this.endDate = endDate;
             this.subTitel = subTitel;
             this.description = description;
         }
 
-        public YearMonth getStartData() {
-            return startData;
+        public YearMonth getStartDate() {
+            return startDate;
         }
 
-        public YearMonth getEndData() {
-            return endData;
+        public YearMonth getEndDate() {
+            return endDate;
         }
 
         public String getSubTitel() {
@@ -118,22 +118,22 @@ public class Organization implements Serializable {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Position position = (Position) o;
-            return Objects.equals(startData, position.startData) &&
-                    Objects.equals(endData, position.endData) &&
+            return Objects.equals(startDate, position.startDate) &&
+                    Objects.equals(endDate, position.endDate) &&
                     Objects.equals(subTitel, position.subTitel) &&
                     Objects.equals(description, position.description);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(startData, endData, subTitel, description);
+            return Objects.hash(startDate, endDate, subTitel, description);
         }
 
         @Override
         public String toString() {
             return "Position{" +
-                    "startData=" + startData +
-                    ", endData=" + endData +
+                    "startData=" + startDate +
+                    ", endData=" + endDate +
                     ", subTitel='" + subTitel + '\'' +
                     ", description='" + description + '\'' +
                     '}';

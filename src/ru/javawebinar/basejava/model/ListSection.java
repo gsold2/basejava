@@ -7,6 +7,8 @@ import java.util.Objects;
 
 public class ListSection extends AbstractSection implements Serializable {
 
+    public static final ListSection EMPTY = new ListSection("");
+
     private List<String> items;
 
     public ListSection() {

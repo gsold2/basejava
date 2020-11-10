@@ -63,9 +63,9 @@
                         <jsp:useBean id="position"
                                      type="ru.javawebinar.basejava.model.Organization.Position"/>
                         <br>
-                        <c:out value="${HtmlUtil.formatDate(position.startData)}"/>
+                        <c:out value="${HtmlUtil.formatDate(position.startDate)}"/>
                         <c:out value="-"/>
-                        <c:out value="${HtmlUtil.formatDate(position.endData)}"/>
+                        <c:out value="${HtmlUtil.formatDate(position.endDate)}"/>
                         <b><c:out value="${position.subTitel}"/></b>
                         <c:if test="${position.description.length() > 0}">
                             <br>

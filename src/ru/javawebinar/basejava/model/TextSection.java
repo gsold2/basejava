@@ -5,6 +5,8 @@ import java.util.Objects;
 
 public class TextSection extends AbstractSection implements Serializable {
 
+    public static final TextSection EMPTY = new TextSection("");
+
     private String content;
 
     public TextSection() {

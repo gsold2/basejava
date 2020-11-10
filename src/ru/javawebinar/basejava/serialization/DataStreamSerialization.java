@@ -72,8 +72,8 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     protected void writeOrganizationPosition(DataOutputStream dos, Organization.Position position) throws IOException {
-        dos.writeUTF(position.getStartData().toString());
-        dos.writeUTF(position.getEndData().toString());
+        dos.writeUTF(position.getStartDate().toString());
+        dos.writeUTF(position.getEndDate().toString());
         dos.writeUTF(position.getSubTitel());
         dos.writeUTF(writeValue(position.getDescription()));
     }
@@ -96,7 +96,7 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     protected void readContact(Resume resume, DataInputStream dis) throws IOException {
-        resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
+        resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
     }
 
     protected void readSection(Resume resume, DataInputStream dis) throws IOException {
@@ -120,18 +120,18 @@ public class DataStreamSerialization implements SerializationStrategy {
     }
 
     protected void readTextSection(Resume resume, DataInputStream dis, SectionType sectionType) throws IOException {
-        resume.addSection(sectionType, new TextSection(dis.readUTF()));
+        resume.setSection(sectionType, new TextSection(dis.readUTF()));
     }
 
     protected void readListSection(Resume resume, DataInputStream dis, SectionType sectionType) throws IOException {
         List<String> items = readWithException(dis, dis::readUTF);
-        resume.addSection(sectionType, new ListSection(items));
+        resume.setSection(sectionType, new ListSection(items));
     }
 
     protected void readOrganizationSection(Resume resume, DataInputStream dis, SectionType sectionType)
             throws IOException {
         List<Organization> organizations = readWithException(dis, () -> readOrganization(dis));
-        resume.addSection(sectionType, new OrganizationSection(organizations));
+        resume.setSection(sectionType, new OrganizationSection(organizations));
     }
 
     protected Organization readOrganization(DataInputStream dis) throws IOException {

@@ -55,7 +55,7 @@
                 <c:when test="${(type == 'EXPERIENCE') || (type == 'EDUCATION')}">
                     <c:forEach var="organization"
                                items="<%=((OrganizationSection) section).getOrganizations()%>" varStatus="counter">
-                        <p><b><c:out value="Название:"/>
+                        <p><b><c:out value="Название организации:"/>
                             <input type="text" name="${type}" size="60"
                                    value="${organization.homePage.name}"></b></p>
                         <p><c:out value="Сайт:"/>
@@ -67,19 +67,19 @@
                                 <jsp:useBean id="position"
                                              type="ru.javawebinar.basejava.model.Organization.Position"/>
 
-                                <p><c:out value="Начало:"/>
-                                    <input type="text" name="${type}${counter.index}startData" size="8"
-                                           value="${HtmlUtil.formatDate(position.startData)}" placeholder="yyyy/MM">
+                                <p><c:out value="Начальная дата:"/>
+                                    <input type="text" name="${type}${counter.index}startDate" size="8"
+                                           value="${HtmlUtil.formatDate(position.startDate)}" placeholder="yyyy/MM">
                                 </p>
-                                <p><c:out value="Окончание:"/>
-                                    <input type="text" name="${type}${counter.index}endData" size="8"
-                                           value="${HtmlUtil.formatDate(position.endData)}" placeholder="yyyy/MM">
+                                <p><c:out value="Конечная дата:"/>
+                                    <input type="text" name="${type}${counter.index}endDate" size="8"
+                                           value="${HtmlUtil.formatDate(position.endDate)}" placeholder="yyyy/MM">
                                 </p>
 
-                                <p><c:out value="Название:"/>
+                                <p><c:out value="Позиция:"/>
                                     <input type="text" name="${type}${counter.index}subTitel" size="60"
-                                           value="${position.subTitel}"></p>
-                                <p><c:out value="Описание:"/>
+                                           value="<%=HtmlUtil.specialChars(position.getSubTitel())%>"></p>
+                                <p><c:out value="Описание позиции:"/>
                                     <br>
                                     <textarea name="${type}${counter.index}description" cols=90
                                               rows=5>${position.description}</textarea></p>
