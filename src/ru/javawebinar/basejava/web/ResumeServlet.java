@@ -63,7 +63,7 @@ public class ResumeServlet extends HttpServlet {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         List<String> valuesList = Arrays.stream(request.getParameter(type.name()).split("\n")).
-                                filter(item -> item != null && !"\r".equals(item)).collect(Collectors.toList());
+                        filter(item -> !item.trim().equals("") &&  !"\r".equals(item)).collect(Collectors.toList());
                         resume.setSection(type, new ListSection(valuesList));
                         break;
                     case EDUCATION:

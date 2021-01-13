@@ -16,7 +16,7 @@ public class Config {
     private final File storageDir;
     private final Storage storage;
 
-    public Config() {
+    private Config() {
         try (InputStream is = new FileInputStream(PROPS)) {
             Properties props = new Properties();
             props.load(is);
